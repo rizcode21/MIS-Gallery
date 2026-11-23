@@ -1,10 +1,25 @@
+# Dependencies
 node_modules/
+
+# Local build artifacts & executables
+bin/
 build/
 *.exe
 *.rar
+*.zip
+*.tar.gz
+
+# Python cache & logs (if any)
 *.pyc
 __pycache__/
-.user_uploaded/
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
 test_*
 temp_*
-*.log
+.user_uploaded/
