@@ -15,6 +15,7 @@ function cleanSvgContent(content) {
 // Helper: Recursively discover all SVG files
 function scanSvgDirectory(dir, baseDir = dir) {
   let results = [];
+  if (!fs.existsSync(dir)) return results;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -33,104 +34,82 @@ function scanSvgDirectory(dir, baseDir = dir) {
   return results;
 }
 
-// Categorize SVG based on folder path and determine prefix & aliases
-function getCategoryInfo(relPath) {
-  const parts = relPath.split('/');
-  const rawBaseName = path.basename(relPath, path.extname(relPath));
-  const baseName = rawBaseName.toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+// Collection definitions (3-letter prefixes)
+const COLLECTION_CONFIG = {
+  cus: { name: 'Custom Mertani', collection: 'custom', color: '#10b981' },
+  mat: { name: 'Material Symbol', collection: 'material-symbol', color: '#8b5cf6' },
+  sfs: { name: 'SF Symbol', collection: 'sf-symbol', color: '#f59e0b' },
+  bst: { name: 'Bootstrap', collection: 'bootstrap', color: '#6366f1' },
+  fth: { name: 'Feather', collection: 'feather', color: '#06b6d4' }
+};
 
-  // Schema matching
-  // 1. Custom / Global
-  if (relPath.startsWith('Custom/Global/')) {
-    return {
-      name: baseName,
-      category: 'Custom: Global',
-      categorySlug: 'custom-global',
-      badgeColor: '#10b981', // Emerald green
-      prefix: 'global-',
-      glyphName: `global-${baseName}`,
-      aliases: [`mis-${baseName}`],
-      originalName: rawBaseName
-    };
+// Parse SVG filename according to Font Awesome architecture: prefix-style-name.svg
+function parseIconInfo(relPath, fileName, manifestMap) {
+  const baseNoExt = path.basename(fileName, '.svg').toLowerCase();
+  
+  // Check if recorded in manifest
+  const manifestItem = manifestMap ? manifestMap.get(relPath) : null;
+
+  // Pattern matching: prefix-style-name.svg (e.g., cus-regular-partnership.svg)
+  const match = baseNoExt.match(/^([a-z0-9]{3})-(regular|solid)-(.+)$/i);
+  
+  let prefix = 'cus';
+  let style = relPath.startsWith('solid') ? 'solid' : 'regular';
+  let iconName = baseNoExt;
+
+  if (match) {
+    prefix = match[1].toLowerCase();
+    style = match[2].toLowerCase();
+    iconName = match[3].toLowerCase();
+  } else {
+    // Fallback: determine style from parent folder if not prefixed
+    if (relPath.includes('solid')) style = 'solid';
+    else if (relPath.includes('regular')) style = 'regular';
   }
 
-  // 2. Custom / Project A, B, C, etc.
-  const projectMatch = relPath.match(/^Custom\/([^/]+)\//i);
-  if (projectMatch) {
-    const projectName = projectMatch[1]; // e.g. "Project A"
-    const projSlug = projectName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '');
-    const shortProj = projSlug.replace('project-', 'proj'); // e.g. "proja"
-    return {
-      name: baseName,
-      category: `Custom: ${projectName}`,
-      categorySlug: `custom-${projSlug}`,
-      badgeColor: '#3b82f6', // Blue
-      prefix: `${shortProj}-`,
-      glyphName: `${shortProj}-${baseName}`,
-      aliases: [`mis-${projSlug}-${baseName}`],
-      originalName: rawBaseName
-    };
+  const collConfig = COLLECTION_CONFIG[prefix] || {
+    name: prefix.toUpperCase(),
+    collection: prefix,
+    color: '#64748b'
+  };
+
+  const glyphName = `${prefix}-${style}-${iconName}`;
+  const className = `mis-${glyphName}`;
+
+  // Generate developer-friendly aliases
+  const aliases = new Set();
+  aliases.add(`mis-${prefix}-${iconName}`);
+  aliases.add(`mis-${style}-${iconName}`);
+  aliases.add(`mis-${iconName}`);
+
+  // Special backwards-compatibility aliases
+  if (iconName.includes('-')) {
+    aliases.add(`mis-${iconName.replace(/-/g, '_')}`);
+    aliases.add(`mis-${prefix}-${iconName.replace(/-/g, '_')}`);
+  }
+  if (glyphName === 'cus-solid-dashboard') {
+    aliases.add('mis-cus-regular-dashboard');
   }
 
-  // 3. Material_Symbol
-  if (relPath.startsWith('Material_Symbol/')) {
-    return {
-      name: baseName,
-      category: 'Material Symbol',
-      categorySlug: 'material-symbol',
-      badgeColor: '#8b5cf6', // Violet
-      prefix: 'mat-',
-      glyphName: `mat-${baseName}`,
-      aliases: [`mis-ms-${baseName}`, `mis-${baseName}`],
-      originalName: rawBaseName
-    };
-  }
-
-  // 4. SF_Symbol
-  if (relPath.startsWith('SF_Symbol/')) {
-    return {
-      name: baseName,
-      category: 'SF Symbol',
-      categorySlug: 'sf-symbol',
-      badgeColor: '#f59e0b', // Amber
-      prefix: 'sf-',
-      glyphName: `sf-${baseName}`,
-      aliases: [],
-      originalName: rawBaseName
-    };
-  }
-
-  // Default / Other subfolder
-  const folderName = parts.length > 1 ? parts[0] : 'General';
-  const folderSlug = folderName.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
   return {
-    name: baseName,
-    category: folderName,
-    categorySlug: folderSlug,
-    badgeColor: '#6b7280', // Gray
-    prefix: `${folderSlug}-`,
-    glyphName: `${folderSlug}-${baseName}`,
-    aliases: [`mis-${baseName}`],
-    originalName: rawBaseName
+    name: iconName,
+    prefix,
+    style,
+    category: collConfig.name,
+    categorySlug: collConfig.collection,
+    badgeColor: collConfig.color,
+    glyphName,
+    className,
+    aliases: Array.from(aliases),
+    originalName: manifestItem ? manifestItem.name : iconName,
+    project: manifestItem ? manifestItem.project : null
   };
 }
 
 // Generate modern, interactive web catalog
 function generateCatalogHtml(iconsMeta) {
-  // Collect unique categories
-  const categoriesMap = new Map();
-  for (const item of iconsMeta) {
-    if (!categoriesMap.has(item.categorySlug)) {
-      categoriesMap.set(item.categorySlug, {
-        name: item.category,
-        slug: item.categorySlug,
-        count: 0,
-        color: item.badgeColor
-      });
-    }
-    categoriesMap.get(item.categorySlug).count++;
-  }
-  const categories = Array.from(categoriesMap.values());
+  const totalRegular = iconsMeta.filter(i => i.style === 'regular').length;
+  const totalSolid = iconsMeta.filter(i => i.style === 'solid').length;
 
   return `<!DOCTYPE html>
 <html lang="id">
@@ -152,6 +131,8 @@ function generateCatalogHtml(iconsMeta) {
       --text-muted: #94a3b8;
       --primary: #38bdf8;
       --primary-hover: #0ea5e9;
+      --regular: #10b981;
+      --solid: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -189,8 +170,9 @@ function generateCatalogHtml(iconsMeta) {
     header p {
       color: var(--text-muted);
       font-size: 1rem;
-      max-width: 650px;
+      max-width: 700px;
       margin: 0 auto 1.5rem;
+      line-height: 1.6;
     }
     .cdn-box {
       background: var(--card-bg);
@@ -225,11 +207,11 @@ function generateCatalogHtml(iconsMeta) {
     }
     .btn-copy:hover { background: #0369a1; }
     
-    /* Controls: Search & Category Tabs */
+    /* Controls: Search, Style & Collection Filters */
     .controls {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1rem;
       margin-bottom: 2rem;
     }
     .search-wrapper {
@@ -262,7 +244,7 @@ function generateCatalogHtml(iconsMeta) {
       pointer-events: none;
     }
     
-    .category-tabs {
+    .filter-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -272,9 +254,9 @@ function generateCatalogHtml(iconsMeta) {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 0.5rem 1rem;
+      padding: 0.45rem 0.9rem;
       border-radius: 9999px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
@@ -290,15 +272,15 @@ function generateCatalogHtml(iconsMeta) {
       font-weight: 700;
     }
     .tab-btn .count {
-      font-size: 0.75rem;
-      opacity: 0.8;
+      font-size: 0.72rem;
+      opacity: 0.85;
       margin-left: 0.35rem;
     }
 
     /* Icon Grid */
     .icon-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 1rem;
     }
     .icon-card {
@@ -320,10 +302,16 @@ function generateCatalogHtml(iconsMeta) {
       background: var(--card-hover);
       box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
     }
-    .cat-chip {
+    .badges-wrapper {
       position: absolute;
       top: 0.5rem;
       left: 0.5rem;
+      right: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chip {
       font-size: 0.65rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -331,9 +319,17 @@ function generateCatalogHtml(iconsMeta) {
       border-radius: 0.35rem;
       letter-spacing: 0.05em;
     }
+    .chip-style {
+      background: rgba(255,255,255,0.08);
+      color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .chip-style.regular { color: #34d399; background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.25); }
+    .chip-style.solid { color: #fbbf24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.25); }
+
     .icon-preview {
       font-size: 2.5rem;
-      margin: 0.75rem 0;
+      margin: 1rem 0 0.5rem;
       color: var(--text);
       transition: transform 0.2s, color 0.2s;
     }
@@ -343,14 +339,14 @@ function generateCatalogHtml(iconsMeta) {
     }
     .icon-name {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       margin-bottom: 0.25rem;
       color: var(--text);
       word-break: break-all;
     }
     .icon-class {
       font-family: monospace;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       background: rgba(0,0,0,0.25);
       padding: 0.15rem 0.4rem;
@@ -358,7 +354,7 @@ function generateCatalogHtml(iconsMeta) {
       margin-bottom: 0.35rem;
     }
     .icon-unicode {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #64748b;
     }
 
@@ -399,8 +395,8 @@ function generateCatalogHtml(iconsMeta) {
   <div class="container">
     <header>
       <div class="badge-pill">Mertani Icon Studio &bull; MIS Gallery</div>
-      <h1>Central Icon Web Font</h1>
-      <p>Koleksi icon resmi yang terbagi ke dalam kategori Global, Project-specific, dan Koleksi Eksternal. Klik kartu icon untuk menyalin kode HTML.</p>
+      <h1>Font Awesome Architecture Icon Font</h1>
+      <p>Katalog resmi icon dengan pola penamaan <code>prefix-style-name.svg</code>. Terbagi rapi ke dalam folder style <strong>regular</strong> (outline) dan <strong>solid</strong> (filled). Klik kartu icon untuk menyalin kode HTML.</p>
 
       <div class="cdn-box">
         <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/mis-icons.css"&gt;</code>
@@ -411,23 +407,38 @@ function generateCatalogHtml(iconsMeta) {
     <div class="controls">
       <div class="search-wrapper">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, kategori, atau class...">
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (cus/mat/sfs), atau class...">
       </div>
 
-      <div class="category-tabs" id="categoryTabs">
-        <button class="tab-btn active" data-category="all">Semua <span class="count">${iconsMeta.length}</span></button>
-        ${categories.map(c => `<button class="tab-btn" data-category="${c.slug}">${c.name} <span class="count">${c.count}</span></button>`).join('')}
+      <!-- Style Filters -->
+      <div class="filter-row" id="styleTabs">
+        <button class="tab-btn active" data-style="all">Semua Style <span class="count">${iconsMeta.length}</span></button>
+        <button class="tab-btn" data-style="regular">Regular / Outline <span class="count">${totalRegular}</span></button>
+        <button class="tab-btn" data-style="solid">Solid / Filled <span class="count">${totalSolid}</span></button>
+      </div>
+
+      <!-- Collection Filters -->
+      <div class="filter-row" id="collectionTabs">
+        <button class="tab-btn active" data-collection="all">Semua Koleksi</button>
+        <button class="tab-btn" data-collection="cus">Custom Mertani (cus)</button>
+        <button class="tab-btn" data-collection="mat">Material Symbol (mat)</button>
+        <button class="tab-btn" data-collection="sfs">SF Symbol (sfs)</button>
       </div>
     </div>
 
     <div class="icon-grid" id="iconGrid">
       ${iconsMeta.map(item => `
-        <div class="icon-card" data-category="${item.categorySlug}" data-name="${item.name.toLowerCase()}" data-class="${item.className}" data-unicode="${item.unicode}" onclick="copyIcon('${item.className}')">
-          <span class="cat-chip" style="background: ${item.badgeColor}22; color: ${item.badgeColor}; border: 1px solid ${item.badgeColor}44;">
-            ${item.category.replace('Custom: ', '')}
-          </span>
+        <div class="icon-card" data-style="${item.style}" data-collection="${item.prefix}" data-name="${item.name.toLowerCase()}" data-class="${item.className}" data-unicode="${item.unicode}" onclick="copyIcon('${item.className}')">
+          <div class="badges-wrapper">
+            <span class="chip" style="background: ${item.badgeColor}22; color: ${item.badgeColor}; border: 1px solid ${item.badgeColor}44;">
+              ${item.prefix}
+            </span>
+            <span class="chip chip-style ${item.style}">
+              ${item.style}
+            </span>
+          </div>
           <i class="${item.className} icon-preview"></i>
-          <div class="icon-name">${item.originalName}</div>
+          <div class="icon-name">${item.name}</div>
           <div class="icon-class">.${item.className}</div>
           <div class="icon-unicode">Unicode: ${item.unicode}</div>
         </div>
@@ -444,21 +455,25 @@ function generateCatalogHtml(iconsMeta) {
 
   <script>
     const searchInput = document.getElementById('searchInput');
-    const tabs = document.querySelectorAll('.tab-btn');
+    const styleTabs = document.querySelectorAll('#styleTabs .tab-btn');
+    const collectionTabs = document.querySelectorAll('#collectionTabs .tab-btn');
     const cards = document.querySelectorAll('.icon-card');
     const toast = document.getElementById('toast');
 
-    let activeCategory = 'all';
+    let activeStyle = 'all';
+    let activeCollection = 'all';
 
     function filterIcons() {
       const q = searchInput.value.toLowerCase().trim();
       cards.forEach(card => {
-        const cat = card.dataset.category;
+        const style = card.dataset.style;
+        const col = card.dataset.collection;
         const name = card.dataset.name;
         const cls = card.dataset.class;
-        const matchesCategory = (activeCategory === 'all' || cat === activeCategory);
-        const matchesSearch = (!q || name.includes(q) || cls.includes(q) || cat.includes(q));
-        if (matchesCategory && matchesSearch) {
+        const matchesStyle = (activeStyle === 'all' || style === activeStyle);
+        const matchesCollection = (activeCollection === 'all' || col === activeCollection);
+        const matchesSearch = (!q || name.includes(q) || cls.includes(q) || col.includes(q) || style.includes(q));
+        if (matchesStyle && matchesCollection && matchesSearch) {
           card.style.display = 'flex';
         } else {
           card.style.display = 'none';
@@ -466,11 +481,20 @@ function generateCatalogHtml(iconsMeta) {
       });
     }
 
-    tabs.forEach(tab => {
+    styleTabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
+        styleTabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        activeCategory = tab.dataset.category;
+        activeStyle = tab.dataset.style;
+        filterIcons();
+      });
+    });
+
+    collectionTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        collectionTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeCollection = tab.dataset.collection;
         filterIcons();
       });
     });
@@ -507,39 +531,54 @@ async function build() {
   const rootDir = path.resolve(__dirname, '..');
   const srcDir = path.join(rootDir, 'svg');
   const distDir = path.join(rootDir, 'dist');
+  const manifestPath = path.join(srcDir, 'icon-manifest.json');
 
-  console.log('🚀 Starting MIS Gallery Font Generation with Category Support...');
+  console.log('🚀 Starting MIS Gallery Font Generation (Font Awesome Architecture)...');
+
+  // Load manifest if available
+  let manifestMap = new Map();
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+      if (Array.isArray(manifest.icons)) {
+        for (const item of manifest.icons) {
+          manifestMap.set(item.newPath.replace(/^svg\//, ''), item);
+        }
+      }
+    } catch (e) {
+      console.warn('⚠️ Could not parse icon-manifest.json:', e.message);
+    }
+  }
 
   // Recursively scan SVG directory
   const svgFiles = scanSvgDirectory(srcDir);
 
   if (svgFiles.length === 0) {
-    console.error('❌ No SVG files found in ./svg directory or its subfolders!');
+    console.error('❌ No SVG files found in ./svg directory!');
     process.exit(1);
   }
 
-  console.log(`📁 Found ${svgFiles.length} SVG icons across subfolders:`);
+  console.log(`📁 Found ${svgFiles.length} SVG icons:`);
 
-  // Create temporary directory for flattened and prefixed SVGs
+  // Create temporary directory for flattened SVGs
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mis-svg-'));
   const processedIcons = [];
 
   for (const item of svgFiles) {
-    const meta = getCategoryInfo(item.relPath);
-    console.log(`   [${meta.category}] ${item.fileName} -> glyph: ${meta.glyphName}`);
+    const meta = parseIconInfo(item.relPath, item.fileName, manifestMap);
+    console.log(`   [${meta.prefix.toUpperCase()}/${meta.style.toUpperCase()}] ${item.fileName} -> glyph: ${meta.glyphName}`);
 
     // Read and clean SVG content
     const rawContent = fs.readFileSync(item.fullPath, 'utf-8');
     const cleaned = cleanSvgContent(rawContent);
 
-    // Staged filename with prefix
+    // Staged filename with glyph name
     const stagedFileName = `${meta.glyphName}.svg`;
     fs.writeFileSync(path.join(tempDir, stagedFileName), cleaned, 'utf-8');
 
     processedIcons.push({
       ...meta,
       stagedFileName,
-      className: `mis-${meta.glyphName}`,
       sourceRelPath: `svg/${item.relPath}`
     });
   }
@@ -561,7 +600,7 @@ async function build() {
     website: {
       title: 'MIS Gallery - Mertani Icon Studio',
       logo: '',
-      version: '1.0.0',
+      version: '2.0.0',
       description: 'Gudang Ikon Resmi Mertani Icon Studio (MIS Gallery).',
       links: [
         {
@@ -584,7 +623,7 @@ async function build() {
   }
 
   // Append developer convenience aliases to mis-icons.css
-  let aliasesCss = '\n/* --- Developer Aliases --- */\n';
+  let aliasesCss = '\n/* --- Developer Aliases & Backwards Compatibility --- */\n';
   let aliasCount = 0;
   for (const icon of processedIcons) {
     if (icon.aliases && icon.aliases.length > 0 && icon.unicode) {
@@ -605,7 +644,7 @@ async function build() {
   fs.writeFileSync(path.join(distDir, 'info.json'), metaJson, 'utf-8');
   console.log(`📋 Written icons.json & info.json metadata (${processedIcons.length} icons)`);
 
-  // Overwrite dist/index.html with modern interactive categorized showcase
+  // Overwrite dist/index.html with modern interactive Font Awesome style catalog
   const customHtml = generateCatalogHtml(processedIcons);
   fs.writeFileSync(path.join(distDir, 'index.html'), customHtml, 'utf-8');
   console.log('✨ Generated modern categorized web catalog in dist/index.html');

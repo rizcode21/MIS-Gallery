@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MIS Gallery Icon Manifest",
+  "description": "Mapping riwayat aset icon dari struktur folder legacy ke arsitektur Font Awesome (prefix-style-name.svg)",
+  "version": "2.0.0",
+  "architecture": {
+    "namingPattern": "prefix-style-name.svg",
+    "prefixLength": 3,
+    "prefixMap": {
+      "cus": {
+        "name": "Custom Mertani Studio",
+        "collection": "custom",
+        "description": "Ikon custom buatan designer internal Mertani"
+      },
+      "mat": {
+        "name": "Material Symbol",
+        "collection": "material-symbol",
+        "description": "Koleksi open source Google Material Symbols"
+      },
+      "sfs": {
+        "name": "SF Symbol",
+        "collection": "sf-symbol",
+        "description": "Koleksi icon Apple SF Symbols"
+      },
+      "bst": {
+        "name": "Bootstrap Icons",
+        "collection": "bootstrap",
+        "description": "Koleksi icon Bootstrap (standar masa depan)"
+      },
+      "fth": {
+        "name": "Feather Icons",
+        "collection": "feather",
+        "description": "Koleksi icon Feather (standar masa depan)"
+      }
+    },
+    "styles": {
+      "regular": "Gaya outline / line / stroke dengan bagian tengah hollow",
+      "solid": "Gaya filled / siluet / blok penuh"
+    }
+  },
+  "icons": [
+    {
+      "name": "partnership",
+      "prefix": "cus",
+      "style": "regular",
+      "collection": "custom",
+      "project": "Global",
+      "oldPath": "svg/Custom/Global/Partnership.svg",
+      "newPath": "svg/regular/cus-regular-partnership.svg",
+      "className": "mis-cus-regular-partnership"
+    },
+    {
+      "name": "sales",
+      "prefix": "cus",
+      "style": "regular",
+      "collection": "custom",
+      "project": "Global",
+      "oldPath": "svg/Custom/Global/Sales.svg",
+      "newPath": "svg/regular/cus-regular-sales.svg",
+      "className": "mis-cus-regular-sales"
+    },
+    {
+      "name": "settings",
+      "prefix": "cus",
+      "style": "regular",
+      "collection": "custom",
+      "project": "Global",
+      "oldPath": "svg/Custom/Global/settings.svg",
+      "newPath": "svg/regular/cus-regular-settings.svg",
+      "className": "mis-cus-regular-settings"
+    },
+    {
+      "name": "donut-small",
+      "prefix": "mat",
+      "style": "regular",
+      "collection": "material-symbol",
+      "project": null,
+      "oldPath": "svg/Material_Symbol/donut_small.svg",
+      "newPath": "svg/regular/mat-regular-donut-small.svg",
+      "className": "mis-mat-regular-donut-small"
+    },
+    {
+      "name": "local-shipping",
+      "prefix": "mat",
+      "style": "regular",
+      "collection": "material-symbol",
+      "project": null,
+      "oldPath": "svg/Material_Symbol/local_shipping.svg",
+      "newPath": "svg/regular/mat-regular-local-shipping.svg",
+      "className": "mis-mat-regular-local-shipping"
+    },
+    {
+      "name": "magnifying-glass",
+      "prefix": "sfs",
+      "style": "regular",
+      "collection": "sf-symbol",
+      "project": null,
+      "oldPath": "svg/SF_Symbol/magnifyingglass.svg",
+      "newPath": "svg/regular/sfs-regular-magnifying-glass.svg",
+      "className": "mis-sfs-regular-magnifying-glass"
+    },
+    {
+      "name": "dashboard",
+      "prefix": "cus",
+      "style": "solid",
+      "collection": "custom",
+      "project": "Project A",
+      "oldPath": "svg/Custom/Project A/dashboard.svg",
+      "newPath": "svg/solid/cus-solid-dashboard.svg",
+      "className": "mis-cus-solid-dashboard"
+    },
+    {
+      "name": "favorite",
+      "prefix": "cus",
+      "style": "solid",
+      "collection": "custom",
+      "project": "Project B",
+      "oldPath": "svg/Custom/Project B/favorite.svg",
+      "newPath": "svg/solid/cus-solid-favorite.svg",
+      "className": "mis-cus-solid-favorite"
+    },
+    {
+      "name": "notification",
+      "prefix": "cus",
+      "style": "solid",
+      "collection": "custom",
+      "project": "Project C",
+      "oldPath": "svg/Custom/Project C/notification.svg",
+      "newPath": "svg/solid/cus-solid-notification.svg",
+      "className": "mis-cus-solid-notification"
+    }
+  ]
+}
