@@ -1,113 +1,449 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIS Gallery - Mertani Icon Studio</title>
-  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-  
-    <meta name="description" content="Mertani Icon Studio (MIS Gallery) Official Web Font & Icon Collection">
-  
-    <meta name="keywords" content="icons,font,svg,mertani,mis-gallery">
-  
-  
-  
-    <link rel="stylesheet" href="mis-icons.css" />
-  
+  <link rel="stylesheet" href="mis-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *{margin: 0;padding: 0;list-style: none;}
-    body { color: #696969; font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif; }
-    a { color: #333; text-decoration: underline; }
-    a:hover { color: rgb(9, 73, 209); }
-    .header { color: #333; text-align: center; padding: 80px 0 60px 0; min-height: 153px; font-size: 14px; }
-    .header .logo svg { height: 120px; width: 120px; }
-    .header h1 { font-size: 42px; padding: 26px 0 10px 0; }
-    .header sup {font-size: 14px; margin: 8px 0 0 8px; position: absolute; color: #7b7b7b; }
-    .info {
-      color: #999;
-      font-weight: normal;
-      max-width: 346px;
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-hover: #334155;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .container {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 20px 0;
-      font-size: 14px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .badge-pill {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 650px;
+      margin: 0 auto 1.5rem;
+    }
+    .cdn-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 760px;
+      margin: 0 auto;
+      gap: 1rem;
+    }
+    .cdn-box code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #38bdf8;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .btn-copy {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .btn-copy:hover { background: #0369a1; }
+    
+    /* Controls: Search & Category Tabs */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .search-wrapper {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem 1.25rem 0.85rem 2.75rem;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    
+    .category-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      background: var(--card-hover);
+      color: var(--text);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #0f172a;
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+    .tab-btn .count {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-left: 0.35rem;
     }
 
-    .icons { max-width: 1190px; margin: 0 auto; }
-    .icons ul { text-align: center; }
-    .icons ul li {
-      vertical-align: top;
-      width: 120px;
-      display: inline-block;
+    /* Icon Grid */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .icon-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem 1rem;
       text-align: center;
-      background-color: rgba(0,0,0,.02);
-      border-radius: 3px;
-      padding: 29px 0 10px 0;
-      margin-right: 10px;
-      margin-top: 10px;
-      transition: all 0.6s ease;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .icons ul li:hover { background-color: rgba(0,0,0,.06); }
-    .icons ul li:hover span { color: #3c75e4; opacity: 1; }
-    .icons ul li .unicode { color: #8c8c8c; opacity: 0.3; }
-    .icons ul li h4 {
-      font-weight: normal;
-      padding: 10px 0 5px 0;
-      display: block;
-      color: #8c8c8c;
-      font-size: 14px;
-      line-height: 12px;
-      opacity: 0.8;
+    .icon-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      background: var(--card-hover);
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
     }
-    .icons ul li:hover h4 { opacity: 1; }
-    .icons ul li svg { width: 24px; height: 24px; }
-    .icons ul li:hover { color: #3c75e4; }
-    .footer { text-align: center; padding: 10px 0 90px 0; }
-    .footer a { text-align: center; padding: 10px 0 90px 0; color: #696969;}
-    .footer a:hover { color: #0949d1; }
-    .links { text-align: center; padding: 50px 0 0 0; font-size: 14px; }
-    
-    .icons ul li.class-icon { font-size: 21px; line-height: 21px; padding-bottom: 20px; }
-    .icons ul li.class-icon p{ font-size: 12px; }
-    .icons ul li.class-icon [class^="mis-"]{ font-size: 26px; }
-    .icons ul li.class-icon [class^="mis-"] [class^="path"]::before {
-      font-family: 'mis-icons' !important;
+    .cat-chip {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border-radius: 0.35rem;
+      letter-spacing: 0.05em;
     }
-    
-    
+    .icon-preview {
+      font-size: 2.5rem;
+      margin: 0.75rem 0;
+      color: var(--text);
+      transition: transform 0.2s, color 0.2s;
+    }
+    .icon-card:hover .icon-preview {
+      color: var(--primary);
+      transform: scale(1.1);
+    }
+    .icon-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+      word-break: break-all;
+    }
+    .icon-class {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.25);
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.35rem;
+    }
+    .icon-unicode {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #10b981;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      transform: translateY(150%);
+      transition: transform 0.3s ease-out;
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    footer a { color: var(--primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
-
 <body>
-  
-  <div class="header">
-    
-    <div class="logo">
-      <a href="./"></a>
-    </div>
-    
-    <h1>MIS Gallery - Mertani Icon Studio<sup>1.0.0</sup></h1>
-    <div class="info">
-      Gudang Ikon Resmi Mertani Icon Studio (MIS Gallery). Klik ikon untuk menyalin class CSS.
-    </div>
-    <p>
-      
-        <a href="https://github.com/rizcode21/MIS-Gallery">GitHub Repository</a>
-      
-    </p>
-  </div>
-  <div class="icons">
-    <ul>
-      <li class="class-icon"><i class="mis-Partnership"></i><p class="name">Partnership</p></li><li class="class-icon"><i class="mis-Sales"></i><p class="name">Sales</p></li><li class="class-icon"><i class="mis-donut_small"></i><p class="name">donut_small</p></li><li class="class-icon"><i class="mis-local_shipping"></i><p class="name">local_shipping</p></li><li class="class-icon"><i class="mis-settings"></i><p class="name">settings</p></li>
-    </ul>
-  </div>
-  <p class="links">
-    
-      <a href="https://github.com/rizcode21/MIS-Gallery">GitHub Repository</a>
-    
-  </p>
-  <div class="footer">
-    
-    <div><a target="_blank" href="https://github.com/jaywcjlove/svgtofont">Created By svgtofont</a></div>
-  </div>
-</body>
 
+  <div class="container">
+    <header>
+      <div class="badge-pill">Mertani Icon Studio &bull; MIS Gallery</div>
+      <h1>Central Icon Web Font</h1>
+      <p>Koleksi icon resmi yang terbagi ke dalam kategori Global, Project-specific, dan Koleksi Eksternal. Klik kartu icon untuk menyalin kode HTML.</p>
+
+      <div class="cdn-box">
+        <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/mis-icons.css"&gt;</code>
+        <button class="btn-copy" onclick="copyCdn()">Salin Link</button>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="search-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, kategori, atau class...">
+      </div>
+
+      <div class="category-tabs" id="categoryTabs">
+        <button class="tab-btn active" data-category="all">Semua <span class="count">9</span></button>
+        <button class="tab-btn" data-category="custom-global">Custom: Global <span class="count">3</span></button><button class="tab-btn" data-category="custom-project-a">Custom: Project A <span class="count">1</span></button><button class="tab-btn" data-category="custom-project-b">Custom: Project B <span class="count">1</span></button><button class="tab-btn" data-category="custom-project-c">Custom: Project C <span class="count">1</span></button><button class="tab-btn" data-category="material-symbol">Material Symbol <span class="count">2</span></button><button class="tab-btn" data-category="sf-symbol">SF Symbol <span class="count">1</span></button>
+      </div>
+    </div>
+
+    <div class="icon-grid" id="iconGrid">
+      
+        <div class="icon-card" data-category="custom-global" data-name="partnership" data-class="mis-global-partnership" data-unicode="\ea01" onclick="copyIcon('mis-global-partnership')">
+          <span class="cat-chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
+            Global
+          </span>
+          <i class="mis-global-partnership icon-preview"></i>
+          <div class="icon-name">Partnership</div>
+          <div class="icon-class">.mis-global-partnership</div>
+          <div class="icon-unicode">Unicode: \ea01</div>
+        </div>
+      
+        <div class="icon-card" data-category="custom-global" data-name="sales" data-class="mis-global-sales" data-unicode="\ea02" onclick="copyIcon('mis-global-sales')">
+          <span class="cat-chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
+            Global
+          </span>
+          <i class="mis-global-sales icon-preview"></i>
+          <div class="icon-name">Sales</div>
+          <div class="icon-class">.mis-global-sales</div>
+          <div class="icon-unicode">Unicode: \ea02</div>
+        </div>
+      
+        <div class="icon-card" data-category="custom-global" data-name="settings" data-class="mis-global-settings" data-unicode="\ea03" onclick="copyIcon('mis-global-settings')">
+          <span class="cat-chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
+            Global
+          </span>
+          <i class="mis-global-settings icon-preview"></i>
+          <div class="icon-name">settings</div>
+          <div class="icon-class">.mis-global-settings</div>
+          <div class="icon-unicode">Unicode: \ea03</div>
+        </div>
+      
+        <div class="icon-card" data-category="custom-project-a" data-name="dashboard" data-class="mis-proja-dashboard" data-unicode="\ea06" onclick="copyIcon('mis-proja-dashboard')">
+          <span class="cat-chip" style="background: #3b82f622; color: #3b82f6; border: 1px solid #3b82f644;">
+            Project A
+          </span>
+          <i class="mis-proja-dashboard icon-preview"></i>
+          <div class="icon-name">dashboard</div>
+          <div class="icon-class">.mis-proja-dashboard</div>
+          <div class="icon-unicode">Unicode: \ea06</div>
+        </div>
+      
+        <div class="icon-card" data-category="custom-project-b" data-name="favorite" data-class="mis-projb-favorite" data-unicode="\ea07" onclick="copyIcon('mis-projb-favorite')">
+          <span class="cat-chip" style="background: #3b82f622; color: #3b82f6; border: 1px solid #3b82f644;">
+            Project B
+          </span>
+          <i class="mis-projb-favorite icon-preview"></i>
+          <div class="icon-name">favorite</div>
+          <div class="icon-class">.mis-projb-favorite</div>
+          <div class="icon-unicode">Unicode: \ea07</div>
+        </div>
+      
+        <div class="icon-card" data-category="custom-project-c" data-name="notification" data-class="mis-projc-notification" data-unicode="\ea08" onclick="copyIcon('mis-projc-notification')">
+          <span class="cat-chip" style="background: #3b82f622; color: #3b82f6; border: 1px solid #3b82f644;">
+            Project C
+          </span>
+          <i class="mis-projc-notification icon-preview"></i>
+          <div class="icon-name">notification</div>
+          <div class="icon-class">.mis-projc-notification</div>
+          <div class="icon-unicode">Unicode: \ea08</div>
+        </div>
+      
+        <div class="icon-card" data-category="material-symbol" data-name="donut_small" data-class="mis-mat-donut_small" data-unicode="\ea04" onclick="copyIcon('mis-mat-donut_small')">
+          <span class="cat-chip" style="background: #8b5cf622; color: #8b5cf6; border: 1px solid #8b5cf644;">
+            Material Symbol
+          </span>
+          <i class="mis-mat-donut_small icon-preview"></i>
+          <div class="icon-name">donut_small</div>
+          <div class="icon-class">.mis-mat-donut_small</div>
+          <div class="icon-unicode">Unicode: \ea04</div>
+        </div>
+      
+        <div class="icon-card" data-category="material-symbol" data-name="local_shipping" data-class="mis-mat-local_shipping" data-unicode="\ea05" onclick="copyIcon('mis-mat-local_shipping')">
+          <span class="cat-chip" style="background: #8b5cf622; color: #8b5cf6; border: 1px solid #8b5cf644;">
+            Material Symbol
+          </span>
+          <i class="mis-mat-local_shipping icon-preview"></i>
+          <div class="icon-name">local_shipping</div>
+          <div class="icon-class">.mis-mat-local_shipping</div>
+          <div class="icon-unicode">Unicode: \ea05</div>
+        </div>
+      
+        <div class="icon-card" data-category="sf-symbol" data-name="magnifyingglass" data-class="mis-sf-magnifyingglass" data-unicode="\ea09" onclick="copyIcon('mis-sf-magnifyingglass')">
+          <span class="cat-chip" style="background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44;">
+            SF Symbol
+          </span>
+          <i class="mis-sf-magnifyingglass icon-preview"></i>
+          <div class="icon-name">magnifyingglass</div>
+          <div class="icon-class">.mis-sf-magnifyingglass</div>
+          <div class="icon-unicode">Unicode: \ea09</div>
+        </div>
+      
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Mertani Icon Studio (MIS Gallery). Distributed via jsDelivr & GitHub Pages.</p>
+      <p style="margin-top: 0.5rem;"><a href="https://github.com/rizcode21/MIS-Gallery" target="_blank">Lihat Repositori GitHub &rarr;</a></p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast">Kode icon berhasil disalin!</div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const tabs = document.querySelectorAll('.tab-btn');
+    const cards = document.querySelectorAll('.icon-card');
+    const toast = document.getElementById('toast');
+
+    let activeCategory = 'all';
+
+    function filterIcons() {
+      const q = searchInput.value.toLowerCase().trim();
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        const name = card.dataset.name;
+        const cls = card.dataset.class;
+        const matchesCategory = (activeCategory === 'all' || cat === activeCategory);
+        const matchesSearch = (!q || name.includes(q) || cls.includes(q) || cat.includes(q));
+        if (matchesCategory && matchesSearch) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeCategory = tab.dataset.category;
+        filterIcons();
+      });
+    });
+
+    searchInput.addEventListener('input', filterIcons);
+
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function copyIcon(className) {
+      const snippet = '<i class="' + className + '"></i>';
+      navigator.clipboard.writeText(snippet).then(() => {
+        showToast('Tersalin: ' + snippet);
+      }).catch(() => {
+        showToast('Class tersalin: .' + className);
+      });
+    }
+
+    function copyCdn() {
+      const cdn = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/mis-icons.css">';
+      navigator.clipboard.writeText(cdn).then(() => {
+        showToast('Link CSS jsDelivr tersalin!');
+      });
+    }
+  </script>
+</body>
 </html>

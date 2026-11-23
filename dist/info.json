@@ -1,0 +1,146 @@
+[
+  {
+    "name": "partnership",
+    "category": "Custom: Global",
+    "categorySlug": "custom-global",
+    "badgeColor": "#10b981",
+    "prefix": "global-",
+    "glyphName": "global-partnership",
+    "aliases": [
+      "mis-partnership"
+    ],
+    "originalName": "Partnership",
+    "stagedFileName": "global-partnership.svg",
+    "className": "mis-global-partnership",
+    "sourceRelPath": "svg/Custom/Global/Partnership.svg",
+    "unicode": "\\ea01"
+  },
+  {
+    "name": "sales",
+    "category": "Custom: Global",
+    "categorySlug": "custom-global",
+    "badgeColor": "#10b981",
+    "prefix": "global-",
+    "glyphName": "global-sales",
+    "aliases": [
+      "mis-sales"
+    ],
+    "originalName": "Sales",
+    "stagedFileName": "global-sales.svg",
+    "className": "mis-global-sales",
+    "sourceRelPath": "svg/Custom/Global/Sales.svg",
+    "unicode": "\\ea02"
+  },
+  {
+    "name": "settings",
+    "category": "Custom: Global",
+    "categorySlug": "custom-global",
+    "badgeColor": "#10b981",
+    "prefix": "global-",
+    "glyphName": "global-settings",
+    "aliases": [
+      "mis-settings"
+    ],
+    "originalName": "settings",
+    "stagedFileName": "global-settings.svg",
+    "className": "mis-global-settings",
+    "sourceRelPath": "svg/Custom/Global/settings.svg",
+    "unicode": "\\ea03"
+  },
+  {
+    "name": "dashboard",
+    "category": "Custom: Project A",
+    "categorySlug": "custom-project-a",
+    "badgeColor": "#3b82f6",
+    "prefix": "proja-",
+    "glyphName": "proja-dashboard",
+    "aliases": [
+      "mis-project-a-dashboard"
+    ],
+    "originalName": "dashboard",
+    "stagedFileName": "proja-dashboard.svg",
+    "className": "mis-proja-dashboard",
+    "sourceRelPath": "svg/Custom/Project A/dashboard.svg",
+    "unicode": "\\ea06"
+  },
+  {
+    "name": "favorite",
+    "category": "Custom: Project B",
+    "categorySlug": "custom-project-b",
+    "badgeColor": "#3b82f6",
+    "prefix": "projb-",
+    "glyphName": "projb-favorite",
+    "aliases": [
+      "mis-project-b-favorite"
+    ],
+    "originalName": "favorite",
+    "stagedFileName": "projb-favorite.svg",
+    "className": "mis-projb-favorite",
+    "sourceRelPath": "svg/Custom/Project B/favorite.svg",
+    "unicode": "\\ea07"
+  },
+  {
+    "name": "notification",
+    "category": "Custom: Project C",
+    "categorySlug": "custom-project-c",
+    "badgeColor": "#3b82f6",
+    "prefix": "projc-",
+    "glyphName": "projc-notification",
+    "aliases": [
+      "mis-project-c-notification"
+    ],
+    "originalName": "notification",
+    "stagedFileName": "projc-notification.svg",
+    "className": "mis-projc-notification",
+    "sourceRelPath": "svg/Custom/Project C/notification.svg",
+    "unicode": "\\ea08"
+  },
+  {
+    "name": "donut_small",
+    "category": "Material Symbol",
+    "categorySlug": "material-symbol",
+    "badgeColor": "#8b5cf6",
+    "prefix": "mat-",
+    "glyphName": "mat-donut_small",
+    "aliases": [
+      "mis-ms-donut_small",
+      "mis-donut_small"
+    ],
+    "originalName": "donut_small",
+    "stagedFileName": "mat-donut_small.svg",
+    "className": "mis-mat-donut_small",
+    "sourceRelPath": "svg/Material_Symbol/donut_small.svg",
+    "unicode": "\\ea04"
+  },
+  {
+    "name": "local_shipping",
+    "category": "Material Symbol",
+    "categorySlug": "material-symbol",
+    "badgeColor": "#8b5cf6",
+    "prefix": "mat-",
+    "glyphName": "mat-local_shipping",
+    "aliases": [
+      "mis-ms-local_shipping",
+      "mis-local_shipping"
+    ],
+    "originalName": "local_shipping",
+    "stagedFileName": "mat-local_shipping.svg",
+    "className": "mis-mat-local_shipping",
+    "sourceRelPath": "svg/Material_Symbol/local_shipping.svg",
+    "unicode": "\\ea05"
+  },
+  {
+    "name": "magnifyingglass",
+    "category": "SF Symbol",
+    "categorySlug": "sf-symbol",
+    "badgeColor": "#f59e0b",
+    "prefix": "sf-",
+    "glyphName": "sf-magnifyingglass",
+    "aliases": [],
+    "originalName": "magnifyingglass",
+    "stagedFileName": "sf-magnifyingglass.svg",
+    "className": "mis-sf-magnifyingglass",
+    "sourceRelPath": "svg/SF_Symbol/magnifyingglass.svg",
+    "unicode": "\\ea09"
+  }
+]
