@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-// Helper: Clean Figma masks, clipPath, and wrappers from SVG
+// Helper: Clean Figma masks, clipPath, and wrappers from monochrome SVGs
 function cleanSvgContent(content) {
   let cleaned = content.replace(/<mask[\s\S]*?<\/mask>/gi, '');
   cleaned = cleaned.replace(/\s+mask="[^"]*"/gi, '');
@@ -12,8 +12,8 @@ function cleanSvgContent(content) {
   return cleaned;
 }
 
-// Helper: Recursively discover all SVG files
-function scanSvgDirectory(dir, baseDir = dir) {
+// Helper: Scan SVGs for monochrome font generation (STRICTLY EXCLUDES 'color' folder)
+function scanFontSvgDirectory(dir, baseDir = dir) {
   let results = [];
   if (!fs.existsSync(dir)) return results;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -21,12 +21,35 @@ function scanSvgDirectory(dir, baseDir = dir) {
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      results = results.concat(scanSvgDirectory(fullPath, baseDir));
+      // EXCLUDE 'color' folder from font compilation
+      if (entry.name.toLowerCase() === 'color') {
+        continue;
+      }
+      results = results.concat(scanFontSvgDirectory(fullPath, baseDir));
     } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.svg')) {
       const relPath = path.relative(baseDir, fullPath).replace(/\\/g, '/');
       results.push({
         fullPath,
         relPath,
+        fileName: entry.name
+      });
+    }
+  }
+  return results;
+}
+
+// Helper: Scan fullcolor SVGs from svg/color directory
+function scanColorSvgDirectory(colorDir) {
+  let results = [];
+  if (!fs.existsSync(colorDir)) return results;
+  const entries = fs.readdirSync(colorDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(colorDir, entry.name);
+    if (entry.isFile() && entry.name.toLowerCase().endsWith('.svg')) {
+      results.push({
+        fullPath,
+        relPath: `color/${entry.name}`,
         fileName: entry.name
       });
     }
@@ -43,14 +66,14 @@ const COLLECTION_CONFIG = {
   fth: { name: 'Feather', collection: 'feather', color: '#06b6d4' }
 };
 
-// Parse SVG filename according to Font Awesome architecture: prefix-style-name.svg
-function parseIconInfo(relPath, fileName, manifestMap) {
+// Known states for color icons
+const SUPPORTED_STATES = ['default', 'active', 'selected', 'warning', 'danger', 'disabled'];
+
+// Parse monochrome font SVG filename (prefix-style-name.svg)
+function parseFontIconInfo(relPath, fileName, manifestMap) {
   const baseNoExt = path.basename(fileName, '.svg').toLowerCase();
-  
-  // Check if recorded in manifest
   const manifestItem = manifestMap ? manifestMap.get(relPath) : null;
 
-  // Pattern matching: prefix-style-name.svg (e.g., cus-regular-partnership.svg)
   const match = baseNoExt.match(/^([a-z0-9]{3})-(regular|solid)-(.+)$/i);
   
   let prefix = 'cus';
@@ -62,7 +85,6 @@ function parseIconInfo(relPath, fileName, manifestMap) {
     style = match[2].toLowerCase();
     iconName = match[3].toLowerCase();
   } else {
-    // Fallback: determine style from parent folder if not prefixed
     if (relPath.includes('solid')) style = 'solid';
     else if (relPath.includes('regular')) style = 'regular';
   }
@@ -82,7 +104,6 @@ function parseIconInfo(relPath, fileName, manifestMap) {
   aliases.add(`mis-${style}-${iconName}`);
   aliases.add(`mis-${iconName}`);
 
-  // Special backwards-compatibility aliases
   if (iconName.includes('-')) {
     aliases.add(`mis-${iconName.replace(/-/g, '_')}`);
     aliases.add(`mis-${prefix}-${iconName.replace(/-/g, '_')}`);
@@ -95,6 +116,8 @@ function parseIconInfo(relPath, fileName, manifestMap) {
     name: iconName,
     prefix,
     style,
+    isFont: true,
+    isColor: false,
     category: collConfig.name,
     categorySlug: collConfig.collection,
     badgeColor: collConfig.color,
@@ -106,10 +129,58 @@ function parseIconInfo(relPath, fileName, manifestMap) {
   };
 }
 
-// Generate modern, interactive web catalog
-function generateCatalogHtml(iconsMeta) {
-  const totalRegular = iconsMeta.filter(i => i.style === 'regular').length;
-  const totalSolid = iconsMeta.filter(i => i.style === 'solid').length;
+// Parse color SVG filename (prefix-color-name[-state].svg)
+function parseColorIconInfo(fileName) {
+  const baseNoExt = path.basename(fileName, '.svg').toLowerCase();
+  
+  // Format: prefix-color-name[-state].svg
+  const match = baseNoExt.match(/^([a-z0-9]{3})-color-(.+)$/i);
+  let prefix = 'cus';
+  let rawName = baseNoExt;
+  let state = null;
+
+  if (match) {
+    prefix = match[1].toLowerCase();
+    rawName = match[2].toLowerCase();
+
+    // Check if trailing segment is a known state
+    for (const s of SUPPORTED_STATES) {
+      if (rawName.endsWith(`-${s}`)) {
+        state = s;
+        rawName = rawName.slice(0, -(s.length + 1));
+        break;
+      }
+    }
+  }
+
+  const collConfig = COLLECTION_CONFIG[prefix] || {
+    name: prefix.toUpperCase(),
+    collection: prefix,
+    color: '#10b981'
+  };
+
+  return {
+    name: rawName,
+    state,
+    prefix,
+    style: 'color',
+    isFont: false,
+    isColor: true,
+    category: collConfig.name,
+    categorySlug: collConfig.collection,
+    badgeColor: '#ec4899', // Pink badge for color
+    fileName,
+    distPath: `color/${fileName}`,
+    className: `mis-color-${rawName}${state ? `-${state}` : ''}`
+  };
+}
+
+// Generate modern, interactive web catalog supporting both Font and Fullcolor SVGs
+function generateCatalogHtml(fontIcons, colorIcons) {
+  const allIcons = [...fontIcons, ...colorIcons];
+  const totalRegular = fontIcons.filter(i => i.style === 'regular').length;
+  const totalSolid = fontIcons.filter(i => i.style === 'solid').length;
+  const totalColor = colorIcons.length;
 
   return `<!DOCTYPE html>
 <html lang="id">
@@ -133,6 +204,7 @@ function generateCatalogHtml(iconsMeta) {
       --primary-hover: #0ea5e9;
       --regular: #10b981;
       --solid: #f59e0b;
+      --color: #ec4899;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -170,7 +242,7 @@ function generateCatalogHtml(iconsMeta) {
     header p {
       color: var(--text-muted);
       font-size: 1rem;
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto 1.5rem;
       line-height: 1.6;
     }
@@ -207,7 +279,7 @@ function generateCatalogHtml(iconsMeta) {
     }
     .btn-copy:hover { background: #0369a1; }
     
-    /* Controls: Search, Style & Collection Filters */
+    /* Controls */
     .controls {
       display: flex;
       flex-direction: column;
@@ -326,12 +398,22 @@ function generateCatalogHtml(iconsMeta) {
     }
     .chip-style.regular { color: #34d399; background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.25); }
     .chip-style.solid { color: #fbbf24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.25); }
+    .chip-style.color { color: #f472b6; background: rgba(244, 114, 182, 0.12); border-color: rgba(244, 114, 182, 0.25); }
 
     .icon-preview {
       font-size: 2.5rem;
       margin: 1rem 0 0.5rem;
       color: var(--text);
       transition: transform 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+    }
+    .icon-preview img {
+      max-height: 44px;
+      max-width: 44px;
+      object-fit: contain;
     }
     .icon-card:hover .icon-preview {
       color: var(--primary);
@@ -353,7 +435,7 @@ function generateCatalogHtml(iconsMeta) {
       border-radius: 0.25rem;
       margin-bottom: 0.35rem;
     }
-    .icon-unicode {
+    .icon-sub {
       font-size: 0.68rem;
       color: #64748b;
     }
@@ -395,8 +477,8 @@ function generateCatalogHtml(iconsMeta) {
   <div class="container">
     <header>
       <div class="badge-pill">Mertani Icon Studio &bull; MIS Gallery</div>
-      <h1>Font Awesome Architecture Icon Font</h1>
-      <p>Katalog resmi icon dengan pola penamaan <code>prefix-style-name.svg</code>. Terbagi rapi ke dalam folder style <strong>regular</strong> (outline) dan <strong>solid</strong> (filled). Klik kartu icon untuk menyalin kode HTML.</p>
+      <h1>Icon Studio &amp; Web Font</h1>
+      <p>Katalog resmi icon dengan pola penamaan <code>prefix-style-name[-state].svg</code>. Kategori monochrome (<strong>regular</strong> &amp; <strong>solid</strong>) terkompilasi sebagai web font, sedangkan <strong>color</strong> dipertahankan sebagai aset multi-color SVG utuh.</p>
 
       <div class="cdn-box">
         <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/mis-icons.css"&gt;</code>
@@ -407,14 +489,15 @@ function generateCatalogHtml(iconsMeta) {
     <div class="controls">
       <div class="search-wrapper">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (cus/mat/sfs), atau class...">
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (cus/mat/sfs), atau style...">
       </div>
 
       <!-- Style Filters -->
       <div class="filter-row" id="styleTabs">
-        <button class="tab-btn active" data-style="all">Semua Style <span class="count">${iconsMeta.length}</span></button>
+        <button class="tab-btn active" data-style="all">Semua Style <span class="count">${allIcons.length}</span></button>
         <button class="tab-btn" data-style="regular">Regular / Outline <span class="count">${totalRegular}</span></button>
         <button class="tab-btn" data-style="solid">Solid / Filled <span class="count">${totalSolid}</span></button>
+        <button class="tab-btn" data-style="color">Color / Multi-color <span class="count">${totalColor}</span></button>
       </div>
 
       <!-- Collection Filters -->
@@ -427,8 +510,8 @@ function generateCatalogHtml(iconsMeta) {
     </div>
 
     <div class="icon-grid" id="iconGrid">
-      ${iconsMeta.map(item => `
-        <div class="icon-card" data-style="${item.style}" data-collection="${item.prefix}" data-name="${item.name.toLowerCase()}" data-class="${item.className}" data-unicode="${item.unicode}" onclick="copyIcon('${item.className}')">
+      ${fontIcons.map(item => `
+        <div class="icon-card" data-style="${item.style}" data-collection="${item.prefix}" data-name="${item.name.toLowerCase()}" data-class="${item.className}" data-type="font" onclick="copyFontIcon('${item.className}')">
           <div class="badges-wrapper">
             <span class="chip" style="background: ${item.badgeColor}22; color: ${item.badgeColor}; border: 1px solid ${item.badgeColor}44;">
               ${item.prefix}
@@ -437,10 +520,27 @@ function generateCatalogHtml(iconsMeta) {
               ${item.style}
             </span>
           </div>
-          <i class="${item.className} icon-preview"></i>
+          <div class="icon-preview"><i class="${item.className}"></i></div>
           <div class="icon-name">${item.name}</div>
           <div class="icon-class">.${item.className}</div>
-          <div class="icon-unicode">Unicode: ${item.unicode}</div>
+          <div class="icon-sub">Unicode: ${item.unicode || '-'}</div>
+        </div>
+      `).join('')}
+
+      ${colorIcons.map(item => `
+        <div class="icon-card" data-style="color" data-collection="${item.prefix}" data-name="${item.name.toLowerCase()}" data-class="${item.className}" data-type="color" onclick="copyColorIcon('${item.fileName}')">
+          <div class="badges-wrapper">
+            <span class="chip" style="background: ${item.badgeColor}22; color: ${item.badgeColor}; border: 1px solid ${item.badgeColor}44;">
+              ${item.prefix}
+            </span>
+            <span class="chip chip-style color">
+              COLOR
+            </span>
+          </div>
+          <div class="icon-preview"><img src="${item.distPath}" alt="${item.name}" loading="lazy" /></div>
+          <div class="icon-name">${item.name}${item.state ? ' (' + item.state + ')' : ''}</div>
+          <div class="icon-class">${item.fileName}</div>
+          <div class="icon-sub">Multi-color SVG Asset</div>
         </div>
       `).join('')}
     </div>
@@ -507,12 +607,22 @@ function generateCatalogHtml(iconsMeta) {
       setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    function copyIcon(className) {
+    function copyFontIcon(className) {
       const snippet = '<i class="' + className + '"></i>';
       navigator.clipboard.writeText(snippet).then(() => {
         showToast('Tersalin: ' + snippet);
       }).catch(() => {
         showToast('Class tersalin: .' + className);
+      });
+    }
+
+    function copyColorIcon(fileName) {
+      const cdnUrl = 'https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/color/' + fileName;
+      const snippet = '<img src="' + cdnUrl + '" alt="' + fileName + '" width="24" height="24" />';
+      navigator.clipboard.writeText(snippet).then(() => {
+        showToast('HTML Tag tersalin: <img src="..." />');
+      }).catch(() => {
+        showToast('URL tersalin: ' + cdnUrl);
       });
     }
 
@@ -531,9 +641,11 @@ async function build() {
   const rootDir = path.resolve(__dirname, '..');
   const srcDir = path.join(rootDir, 'svg');
   const distDir = path.join(rootDir, 'dist');
+  const colorDir = path.join(srcDir, 'color');
+  const distColorDir = path.join(distDir, 'color');
   const manifestPath = path.join(srcDir, 'icon-manifest.json');
 
-  console.log('🚀 Starting MIS Gallery Font Generation (Font Awesome Architecture)...');
+  console.log('🚀 Starting MIS Gallery Font & Asset Build (Font Awesome Architecture)...');
 
   // Load manifest if available
   let manifestMap = new Map();
@@ -550,22 +662,40 @@ async function build() {
     }
   }
 
-  // Recursively scan SVG directory
-  const svgFiles = scanSvgDirectory(srcDir);
+  // 1. Process Color SVGs (STRICTLY EXCLUDED from font compilation & currentColor replacement)
+  if (!fs.existsSync(distColorDir)) {
+    fs.mkdirSync(distColorDir, { recursive: true });
+  }
 
-  if (svgFiles.length === 0) {
-    console.error('❌ No SVG files found in ./svg directory!');
+  const colorSvgFiles = scanColorSvgDirectory(colorDir);
+  const processedColorIcons = [];
+
+  console.log(`🎨 Found ${colorSvgFiles.length} color SVG icons in svg/color/ (EXCLUDED from font compilation):`);
+  for (const item of colorSvgFiles) {
+    const meta = parseColorIconInfo(item.fileName);
+    // Copy as-is to dist/color/ preserving 100% of fullcolor attributes and gradients intact
+    const rawContent = fs.readFileSync(item.fullPath, 'utf-8');
+    fs.writeFileSync(path.join(distColorDir, item.fileName), rawContent, 'utf-8');
+    processedColorIcons.push(meta);
+    console.log(`   [COLOR] ${item.fileName} -> copied to dist/color/${item.fileName} (intact fullcolor SVG)`);
+  }
+
+  // 2. Scan Monochrome SVGs (Only regular and solid subfolders)
+  const fontSvgFiles = scanFontSvgDirectory(srcDir);
+
+  if (fontSvgFiles.length === 0) {
+    console.error('❌ No monochrome SVG files found for icon font in svg/regular or svg/solid!');
     process.exit(1);
   }
 
-  console.log(`📁 Found ${svgFiles.length} SVG icons:`);
+  console.log(`\n📁 Found ${fontSvgFiles.length} monochrome SVG icons for icon font:`);
 
-  // Create temporary directory for flattened SVGs
+  // Create temporary directory for flattened font SVGs
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mis-svg-'));
-  const processedIcons = [];
+  const processedFontIcons = [];
 
-  for (const item of svgFiles) {
-    const meta = parseIconInfo(item.relPath, item.fileName, manifestMap);
+  for (const item of fontSvgFiles) {
+    const meta = parseFontIconInfo(item.relPath, item.fileName, manifestMap);
     console.log(`   [${meta.prefix.toUpperCase()}/${meta.style.toUpperCase()}] ${item.fileName} -> glyph: ${meta.glyphName}`);
 
     // Read and clean SVG content
@@ -576,22 +706,22 @@ async function build() {
     const stagedFileName = `${meta.glyphName}.svg`;
     fs.writeFileSync(path.join(tempDir, stagedFileName), cleaned, 'utf-8');
 
-    processedIcons.push({
+    processedFontIcons.push({
       ...meta,
       stagedFileName,
       sourceRelPath: `svg/${item.relPath}`
     });
   }
 
-  // Run svgtofont engine
-  console.log('\n⚙️  Running svgtofont compiler...');
+  // Run svgtofont engine on monochrome icons only
+  console.log('\n⚙️  Running svgtofont compiler for monochrome web font...');
   await svgtofont({
     src: tempDir,
     dist: distDir,
     fontName: 'mis-icons',
     classNamePrefix: 'mis',
     css: true,
-    emptyDist: true,
+    emptyDist: false,
     startUnicode: 0xea01,
     svgicons2svgfont: {
       fontHeight: 1000,
@@ -600,7 +730,7 @@ async function build() {
     website: {
       title: 'MIS Gallery - Mertani Icon Studio',
       logo: '',
-      version: '2.0.0',
+      version: '2.1.0',
       description: 'Gudang Ikon Resmi Mertani Icon Studio (MIS Gallery).',
       links: [
         {
@@ -615,8 +745,7 @@ async function build() {
   const cssPath = path.join(distDir, 'mis-icons.css');
   let cssContent = fs.readFileSync(cssPath, 'utf-8');
 
-  // Match class to unicode: .mis-xxx::before { content: "\ea01"; }
-  for (const icon of processedIcons) {
+  for (const icon of processedFontIcons) {
     const re = new RegExp(`\\.mis-${icon.glyphName}::before\\s*\\{\\s*content:\\s*"([^"]+)";`, 'i');
     const match = cssContent.match(re);
     icon.unicode = match ? match[1] : '';
@@ -625,7 +754,7 @@ async function build() {
   // Append developer convenience aliases to mis-icons.css
   let aliasesCss = '\n/* --- Developer Aliases & Backwards Compatibility --- */\n';
   let aliasCount = 0;
-  for (const icon of processedIcons) {
+  for (const icon of processedFontIcons) {
     if (icon.aliases && icon.aliases.length > 0 && icon.unicode) {
       for (const alias of icon.aliases) {
         aliasesCss += `.${alias}::before { content: "${icon.unicode}"; }\n`;
@@ -638,23 +767,29 @@ async function build() {
     console.log(`🔗 Appended ${aliasCount} CSS class aliases to mis-icons.css`);
   }
 
-  // Write structured metadata json (dist/icons.json and dist/info.json)
-  const metaJson = JSON.stringify(processedIcons, null, 2);
+  // Combine metadata: both font icons and color assets
+  const combinedMetadata = {
+    fontIcons: processedFontIcons,
+    colorIcons: processedColorIcons,
+    totalCount: processedFontIcons.length + processedColorIcons.length
+  };
+
+  const metaJson = JSON.stringify(combinedMetadata, null, 2);
   fs.writeFileSync(path.join(distDir, 'icons.json'), metaJson, 'utf-8');
   fs.writeFileSync(path.join(distDir, 'info.json'), metaJson, 'utf-8');
-  console.log(`📋 Written icons.json & info.json metadata (${processedIcons.length} icons)`);
+  console.log(`📋 Written icons.json & info.json metadata (${processedFontIcons.length} font icons, ${processedColorIcons.length} color SVGs)`);
 
-  // Overwrite dist/index.html with modern interactive Font Awesome style catalog
-  const customHtml = generateCatalogHtml(processedIcons);
+  // Generate web catalog supporting both Font and Color SVGs
+  const customHtml = generateCatalogHtml(processedFontIcons, processedColorIcons);
   fs.writeFileSync(path.join(distDir, 'index.html'), customHtml, 'utf-8');
-  console.log('✨ Generated modern categorized web catalog in dist/index.html');
+  console.log('✨ Generated modern web catalog in dist/index.html (with full Color SVG support)');
 
   // Cleanup temp dir
   try {
     fs.rmSync(tempDir, { recursive: true, force: true });
   } catch (e) {}
 
-  console.log('✅ MIS Gallery icon fonts & catalog built successfully in dist/!\n');
+  console.log('✅ MIS Gallery build complete!\n');
 }
 
 build().catch((err) => {

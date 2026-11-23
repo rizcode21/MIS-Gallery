@@ -20,6 +20,7 @@
       --primary-hover: #0ea5e9;
       --regular: #10b981;
       --solid: #f59e0b;
+      --color: #ec4899;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -57,7 +58,7 @@
     header p {
       color: var(--text-muted);
       font-size: 1rem;
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto 1.5rem;
       line-height: 1.6;
     }
@@ -94,7 +95,7 @@
     }
     .btn-copy:hover { background: #0369a1; }
     
-    /* Controls: Search, Style & Collection Filters */
+    /* Controls */
     .controls {
       display: flex;
       flex-direction: column;
@@ -213,12 +214,22 @@
     }
     .chip-style.regular { color: #34d399; background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.25); }
     .chip-style.solid { color: #fbbf24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.25); }
+    .chip-style.color { color: #f472b6; background: rgba(244, 114, 182, 0.12); border-color: rgba(244, 114, 182, 0.25); }
 
     .icon-preview {
       font-size: 2.5rem;
       margin: 1rem 0 0.5rem;
       color: var(--text);
       transition: transform 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+    }
+    .icon-preview img {
+      max-height: 44px;
+      max-width: 44px;
+      object-fit: contain;
     }
     .icon-card:hover .icon-preview {
       color: var(--primary);
@@ -240,7 +251,7 @@
       border-radius: 0.25rem;
       margin-bottom: 0.35rem;
     }
-    .icon-unicode {
+    .icon-sub {
       font-size: 0.68rem;
       color: #64748b;
     }
@@ -282,8 +293,8 @@
   <div class="container">
     <header>
       <div class="badge-pill">Mertani Icon Studio &bull; MIS Gallery</div>
-      <h1>Font Awesome Architecture Icon Font</h1>
-      <p>Katalog resmi icon dengan pola penamaan <code>prefix-style-name.svg</code>. Terbagi rapi ke dalam folder style <strong>regular</strong> (outline) dan <strong>solid</strong> (filled). Klik kartu icon untuk menyalin kode HTML.</p>
+      <h1>Icon Studio &amp; Web Font</h1>
+      <p>Katalog resmi icon dengan pola penamaan <code>prefix-style-name[-state].svg</code>. Kategori monochrome (<strong>regular</strong> &amp; <strong>solid</strong>) terkompilasi sebagai web font, sedangkan <strong>color</strong> dipertahankan sebagai aset multi-color SVG utuh.</p>
 
       <div class="cdn-box">
         <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/mis-icons.css"&gt;</code>
@@ -294,7 +305,7 @@
     <div class="controls">
       <div class="search-wrapper">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (cus/mat/sfs), atau class...">
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (cus/mat/sfs), atau style...">
       </div>
 
       <!-- Style Filters -->
@@ -302,6 +313,7 @@
         <button class="tab-btn active" data-style="all">Semua Style <span class="count">9</span></button>
         <button class="tab-btn" data-style="regular">Regular / Outline <span class="count">6</span></button>
         <button class="tab-btn" data-style="solid">Solid / Filled <span class="count">3</span></button>
+        <button class="tab-btn" data-style="color">Color / Multi-color <span class="count">0</span></button>
       </div>
 
       <!-- Collection Filters -->
@@ -315,7 +327,7 @@
 
     <div class="icon-grid" id="iconGrid">
       
-        <div class="icon-card" data-style="regular" data-collection="cus" data-name="partnership" data-class="mis-cus-regular-partnership" data-unicode="\ea01" onclick="copyIcon('mis-cus-regular-partnership')">
+        <div class="icon-card" data-style="regular" data-collection="cus" data-name="partnership" data-class="mis-cus-regular-partnership" data-type="font" onclick="copyFontIcon('mis-cus-regular-partnership')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
               cus
@@ -324,13 +336,13 @@
               regular
             </span>
           </div>
-          <i class="mis-cus-regular-partnership icon-preview"></i>
+          <div class="icon-preview"><i class="mis-cus-regular-partnership"></i></div>
           <div class="icon-name">partnership</div>
           <div class="icon-class">.mis-cus-regular-partnership</div>
-          <div class="icon-unicode">Unicode: \ea01</div>
+          <div class="icon-sub">Unicode: \ea01</div>
         </div>
       
-        <div class="icon-card" data-style="regular" data-collection="cus" data-name="sales" data-class="mis-cus-regular-sales" data-unicode="\ea02" onclick="copyIcon('mis-cus-regular-sales')">
+        <div class="icon-card" data-style="regular" data-collection="cus" data-name="sales" data-class="mis-cus-regular-sales" data-type="font" onclick="copyFontIcon('mis-cus-regular-sales')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
               cus
@@ -339,13 +351,13 @@
               regular
             </span>
           </div>
-          <i class="mis-cus-regular-sales icon-preview"></i>
+          <div class="icon-preview"><i class="mis-cus-regular-sales"></i></div>
           <div class="icon-name">sales</div>
           <div class="icon-class">.mis-cus-regular-sales</div>
-          <div class="icon-unicode">Unicode: \ea02</div>
+          <div class="icon-sub">Unicode: \ea02</div>
         </div>
       
-        <div class="icon-card" data-style="regular" data-collection="cus" data-name="settings" data-class="mis-cus-regular-settings" data-unicode="\ea03" onclick="copyIcon('mis-cus-regular-settings')">
+        <div class="icon-card" data-style="regular" data-collection="cus" data-name="settings" data-class="mis-cus-regular-settings" data-type="font" onclick="copyFontIcon('mis-cus-regular-settings')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
               cus
@@ -354,13 +366,13 @@
               regular
             </span>
           </div>
-          <i class="mis-cus-regular-settings icon-preview"></i>
+          <div class="icon-preview"><i class="mis-cus-regular-settings"></i></div>
           <div class="icon-name">settings</div>
           <div class="icon-class">.mis-cus-regular-settings</div>
-          <div class="icon-unicode">Unicode: \ea03</div>
+          <div class="icon-sub">Unicode: \ea03</div>
         </div>
       
-        <div class="icon-card" data-style="regular" data-collection="mat" data-name="donut-small" data-class="mis-mat-regular-donut-small" data-unicode="\ea07" onclick="copyIcon('mis-mat-regular-donut-small')">
+        <div class="icon-card" data-style="regular" data-collection="mat" data-name="donut-small" data-class="mis-mat-regular-donut-small" data-type="font" onclick="copyFontIcon('mis-mat-regular-donut-small')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #8b5cf622; color: #8b5cf6; border: 1px solid #8b5cf644;">
               mat
@@ -369,13 +381,13 @@
               regular
             </span>
           </div>
-          <i class="mis-mat-regular-donut-small icon-preview"></i>
+          <div class="icon-preview"><i class="mis-mat-regular-donut-small"></i></div>
           <div class="icon-name">donut-small</div>
           <div class="icon-class">.mis-mat-regular-donut-small</div>
-          <div class="icon-unicode">Unicode: \ea07</div>
+          <div class="icon-sub">Unicode: \ea07</div>
         </div>
       
-        <div class="icon-card" data-style="regular" data-collection="mat" data-name="local-shipping" data-class="mis-mat-regular-local-shipping" data-unicode="\ea08" onclick="copyIcon('mis-mat-regular-local-shipping')">
+        <div class="icon-card" data-style="regular" data-collection="mat" data-name="local-shipping" data-class="mis-mat-regular-local-shipping" data-type="font" onclick="copyFontIcon('mis-mat-regular-local-shipping')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #8b5cf622; color: #8b5cf6; border: 1px solid #8b5cf644;">
               mat
@@ -384,13 +396,13 @@
               regular
             </span>
           </div>
-          <i class="mis-mat-regular-local-shipping icon-preview"></i>
+          <div class="icon-preview"><i class="mis-mat-regular-local-shipping"></i></div>
           <div class="icon-name">local-shipping</div>
           <div class="icon-class">.mis-mat-regular-local-shipping</div>
-          <div class="icon-unicode">Unicode: \ea08</div>
+          <div class="icon-sub">Unicode: \ea08</div>
         </div>
       
-        <div class="icon-card" data-style="regular" data-collection="sfs" data-name="magnifying-glass" data-class="mis-sfs-regular-magnifying-glass" data-unicode="\ea09" onclick="copyIcon('mis-sfs-regular-magnifying-glass')">
+        <div class="icon-card" data-style="regular" data-collection="sfs" data-name="magnifying-glass" data-class="mis-sfs-regular-magnifying-glass" data-type="font" onclick="copyFontIcon('mis-sfs-regular-magnifying-glass')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #f59e0b22; color: #f59e0b; border: 1px solid #f59e0b44;">
               sfs
@@ -399,13 +411,13 @@
               regular
             </span>
           </div>
-          <i class="mis-sfs-regular-magnifying-glass icon-preview"></i>
+          <div class="icon-preview"><i class="mis-sfs-regular-magnifying-glass"></i></div>
           <div class="icon-name">magnifying-glass</div>
           <div class="icon-class">.mis-sfs-regular-magnifying-glass</div>
-          <div class="icon-unicode">Unicode: \ea09</div>
+          <div class="icon-sub">Unicode: \ea09</div>
         </div>
       
-        <div class="icon-card" data-style="solid" data-collection="cus" data-name="dashboard" data-class="mis-cus-solid-dashboard" data-unicode="\ea04" onclick="copyIcon('mis-cus-solid-dashboard')">
+        <div class="icon-card" data-style="solid" data-collection="cus" data-name="dashboard" data-class="mis-cus-solid-dashboard" data-type="font" onclick="copyFontIcon('mis-cus-solid-dashboard')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
               cus
@@ -414,13 +426,13 @@
               solid
             </span>
           </div>
-          <i class="mis-cus-solid-dashboard icon-preview"></i>
+          <div class="icon-preview"><i class="mis-cus-solid-dashboard"></i></div>
           <div class="icon-name">dashboard</div>
           <div class="icon-class">.mis-cus-solid-dashboard</div>
-          <div class="icon-unicode">Unicode: \ea04</div>
+          <div class="icon-sub">Unicode: \ea04</div>
         </div>
       
-        <div class="icon-card" data-style="solid" data-collection="cus" data-name="favorite" data-class="mis-cus-solid-favorite" data-unicode="\ea05" onclick="copyIcon('mis-cus-solid-favorite')">
+        <div class="icon-card" data-style="solid" data-collection="cus" data-name="favorite" data-class="mis-cus-solid-favorite" data-type="font" onclick="copyFontIcon('mis-cus-solid-favorite')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
               cus
@@ -429,13 +441,13 @@
               solid
             </span>
           </div>
-          <i class="mis-cus-solid-favorite icon-preview"></i>
+          <div class="icon-preview"><i class="mis-cus-solid-favorite"></i></div>
           <div class="icon-name">favorite</div>
           <div class="icon-class">.mis-cus-solid-favorite</div>
-          <div class="icon-unicode">Unicode: \ea05</div>
+          <div class="icon-sub">Unicode: \ea05</div>
         </div>
       
-        <div class="icon-card" data-style="solid" data-collection="cus" data-name="notification" data-class="mis-cus-solid-notification" data-unicode="\ea06" onclick="copyIcon('mis-cus-solid-notification')">
+        <div class="icon-card" data-style="solid" data-collection="cus" data-name="notification" data-class="mis-cus-solid-notification" data-type="font" onclick="copyFontIcon('mis-cus-solid-notification')">
           <div class="badges-wrapper">
             <span class="chip" style="background: #10b98122; color: #10b981; border: 1px solid #10b98144;">
               cus
@@ -444,11 +456,13 @@
               solid
             </span>
           </div>
-          <i class="mis-cus-solid-notification icon-preview"></i>
+          <div class="icon-preview"><i class="mis-cus-solid-notification"></i></div>
           <div class="icon-name">notification</div>
           <div class="icon-class">.mis-cus-solid-notification</div>
-          <div class="icon-unicode">Unicode: \ea06</div>
+          <div class="icon-sub">Unicode: \ea06</div>
         </div>
+      
+
       
     </div>
 
@@ -514,12 +528,22 @@
       setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    function copyIcon(className) {
+    function copyFontIcon(className) {
       const snippet = '<i class="' + className + '"></i>';
       navigator.clipboard.writeText(snippet).then(() => {
         showToast('Tersalin: ' + snippet);
       }).catch(() => {
         showToast('Class tersalin: .' + className);
+      });
+    }
+
+    function copyColorIcon(fileName) {
+      const cdnUrl = 'https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/color/' + fileName;
+      const snippet = '<img src="' + cdnUrl + '" alt="' + fileName + '" width="24" height="24" />';
+      navigator.clipboard.writeText(snippet).then(() => {
+        showToast('HTML Tag tersalin: <img src="..." />');
+      }).catch(() => {
+        showToast('URL tersalin: ' + cdnUrl);
       });
     }
 

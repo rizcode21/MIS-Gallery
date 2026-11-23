@@ -1,189 +1,211 @@
-[
-  {
-    "name": "partnership",
-    "prefix": "cus",
-    "style": "regular",
-    "category": "Custom Mertani",
-    "categorySlug": "custom",
-    "badgeColor": "#10b981",
-    "glyphName": "cus-regular-partnership",
-    "className": "mis-cus-regular-partnership",
-    "aliases": [
-      "mis-cus-partnership",
-      "mis-regular-partnership",
-      "mis-partnership"
-    ],
-    "originalName": "partnership",
-    "project": "Global",
-    "stagedFileName": "cus-regular-partnership.svg",
-    "sourceRelPath": "svg/regular/cus-regular-partnership.svg",
-    "unicode": "\\ea01"
-  },
-  {
-    "name": "sales",
-    "prefix": "cus",
-    "style": "regular",
-    "category": "Custom Mertani",
-    "categorySlug": "custom",
-    "badgeColor": "#10b981",
-    "glyphName": "cus-regular-sales",
-    "className": "mis-cus-regular-sales",
-    "aliases": [
-      "mis-cus-sales",
-      "mis-regular-sales",
-      "mis-sales"
-    ],
-    "originalName": "sales",
-    "project": "Global",
-    "stagedFileName": "cus-regular-sales.svg",
-    "sourceRelPath": "svg/regular/cus-regular-sales.svg",
-    "unicode": "\\ea02"
-  },
-  {
-    "name": "settings",
-    "prefix": "cus",
-    "style": "regular",
-    "category": "Custom Mertani",
-    "categorySlug": "custom",
-    "badgeColor": "#10b981",
-    "glyphName": "cus-regular-settings",
-    "className": "mis-cus-regular-settings",
-    "aliases": [
-      "mis-cus-settings",
-      "mis-regular-settings",
-      "mis-settings"
-    ],
-    "originalName": "settings",
-    "project": "Global",
-    "stagedFileName": "cus-regular-settings.svg",
-    "sourceRelPath": "svg/regular/cus-regular-settings.svg",
-    "unicode": "\\ea03"
-  },
-  {
-    "name": "donut-small",
-    "prefix": "mat",
-    "style": "regular",
-    "category": "Material Symbol",
-    "categorySlug": "material-symbol",
-    "badgeColor": "#8b5cf6",
-    "glyphName": "mat-regular-donut-small",
-    "className": "mis-mat-regular-donut-small",
-    "aliases": [
-      "mis-mat-donut-small",
-      "mis-regular-donut-small",
-      "mis-donut-small",
-      "mis-donut_small",
-      "mis-mat-donut_small"
-    ],
-    "originalName": "donut-small",
-    "project": null,
-    "stagedFileName": "mat-regular-donut-small.svg",
-    "sourceRelPath": "svg/regular/mat-regular-donut-small.svg",
-    "unicode": "\\ea07"
-  },
-  {
-    "name": "local-shipping",
-    "prefix": "mat",
-    "style": "regular",
-    "category": "Material Symbol",
-    "categorySlug": "material-symbol",
-    "badgeColor": "#8b5cf6",
-    "glyphName": "mat-regular-local-shipping",
-    "className": "mis-mat-regular-local-shipping",
-    "aliases": [
-      "mis-mat-local-shipping",
-      "mis-regular-local-shipping",
-      "mis-local-shipping",
-      "mis-local_shipping",
-      "mis-mat-local_shipping"
-    ],
-    "originalName": "local-shipping",
-    "project": null,
-    "stagedFileName": "mat-regular-local-shipping.svg",
-    "sourceRelPath": "svg/regular/mat-regular-local-shipping.svg",
-    "unicode": "\\ea08"
-  },
-  {
-    "name": "magnifying-glass",
-    "prefix": "sfs",
-    "style": "regular",
-    "category": "SF Symbol",
-    "categorySlug": "sf-symbol",
-    "badgeColor": "#f59e0b",
-    "glyphName": "sfs-regular-magnifying-glass",
-    "className": "mis-sfs-regular-magnifying-glass",
-    "aliases": [
-      "mis-sfs-magnifying-glass",
-      "mis-regular-magnifying-glass",
-      "mis-magnifying-glass",
-      "mis-magnifying_glass",
-      "mis-sfs-magnifying_glass"
-    ],
-    "originalName": "magnifying-glass",
-    "project": null,
-    "stagedFileName": "sfs-regular-magnifying-glass.svg",
-    "sourceRelPath": "svg/regular/sfs-regular-magnifying-glass.svg",
-    "unicode": "\\ea09"
-  },
-  {
-    "name": "dashboard",
-    "prefix": "cus",
-    "style": "solid",
-    "category": "Custom Mertani",
-    "categorySlug": "custom",
-    "badgeColor": "#10b981",
-    "glyphName": "cus-solid-dashboard",
-    "className": "mis-cus-solid-dashboard",
-    "aliases": [
-      "mis-cus-dashboard",
-      "mis-solid-dashboard",
-      "mis-dashboard",
-      "mis-cus-regular-dashboard"
-    ],
-    "originalName": "dashboard",
-    "project": "Project A",
-    "stagedFileName": "cus-solid-dashboard.svg",
-    "sourceRelPath": "svg/solid/cus-solid-dashboard.svg",
-    "unicode": "\\ea04"
-  },
-  {
-    "name": "favorite",
-    "prefix": "cus",
-    "style": "solid",
-    "category": "Custom Mertani",
-    "categorySlug": "custom",
-    "badgeColor": "#10b981",
-    "glyphName": "cus-solid-favorite",
-    "className": "mis-cus-solid-favorite",
-    "aliases": [
-      "mis-cus-favorite",
-      "mis-solid-favorite",
-      "mis-favorite"
-    ],
-    "originalName": "favorite",
-    "project": "Project B",
-    "stagedFileName": "cus-solid-favorite.svg",
-    "sourceRelPath": "svg/solid/cus-solid-favorite.svg",
-    "unicode": "\\ea05"
-  },
-  {
-    "name": "notification",
-    "prefix": "cus",
-    "style": "solid",
-    "category": "Custom Mertani",
-    "categorySlug": "custom",
-    "badgeColor": "#10b981",
-    "glyphName": "cus-solid-notification",
-    "className": "mis-cus-solid-notification",
-    "aliases": [
-      "mis-cus-notification",
-      "mis-solid-notification",
-      "mis-notification"
-    ],
-    "originalName": "notification",
-    "project": "Project C",
-    "stagedFileName": "cus-solid-notification.svg",
-    "sourceRelPath": "svg/solid/cus-solid-notification.svg",
-    "unicode": "\\ea06"
-  }
-]
+{
+  "fontIcons": [
+    {
+      "name": "partnership",
+      "prefix": "cus",
+      "style": "regular",
+      "isFont": true,
+      "isColor": false,
+      "category": "Custom Mertani",
+      "categorySlug": "custom",
+      "badgeColor": "#10b981",
+      "glyphName": "cus-regular-partnership",
+      "className": "mis-cus-regular-partnership",
+      "aliases": [
+        "mis-cus-partnership",
+        "mis-regular-partnership",
+        "mis-partnership"
+      ],
+      "originalName": "partnership",
+      "project": "Global",
+      "stagedFileName": "cus-regular-partnership.svg",
+      "sourceRelPath": "svg/regular/cus-regular-partnership.svg",
+      "unicode": "\\ea01"
+    },
+    {
+      "name": "sales",
+      "prefix": "cus",
+      "style": "regular",
+      "isFont": true,
+      "isColor": false,
+      "category": "Custom Mertani",
+      "categorySlug": "custom",
+      "badgeColor": "#10b981",
+      "glyphName": "cus-regular-sales",
+      "className": "mis-cus-regular-sales",
+      "aliases": [
+        "mis-cus-sales",
+        "mis-regular-sales",
+        "mis-sales"
+      ],
+      "originalName": "sales",
+      "project": "Global",
+      "stagedFileName": "cus-regular-sales.svg",
+      "sourceRelPath": "svg/regular/cus-regular-sales.svg",
+      "unicode": "\\ea02"
+    },
+    {
+      "name": "settings",
+      "prefix": "cus",
+      "style": "regular",
+      "isFont": true,
+      "isColor": false,
+      "category": "Custom Mertani",
+      "categorySlug": "custom",
+      "badgeColor": "#10b981",
+      "glyphName": "cus-regular-settings",
+      "className": "mis-cus-regular-settings",
+      "aliases": [
+        "mis-cus-settings",
+        "mis-regular-settings",
+        "mis-settings"
+      ],
+      "originalName": "settings",
+      "project": "Global",
+      "stagedFileName": "cus-regular-settings.svg",
+      "sourceRelPath": "svg/regular/cus-regular-settings.svg",
+      "unicode": "\\ea03"
+    },
+    {
+      "name": "donut-small",
+      "prefix": "mat",
+      "style": "regular",
+      "isFont": true,
+      "isColor": false,
+      "category": "Material Symbol",
+      "categorySlug": "material-symbol",
+      "badgeColor": "#8b5cf6",
+      "glyphName": "mat-regular-donut-small",
+      "className": "mis-mat-regular-donut-small",
+      "aliases": [
+        "mis-mat-donut-small",
+        "mis-regular-donut-small",
+        "mis-donut-small",
+        "mis-donut_small",
+        "mis-mat-donut_small"
+      ],
+      "originalName": "donut-small",
+      "project": null,
+      "stagedFileName": "mat-regular-donut-small.svg",
+      "sourceRelPath": "svg/regular/mat-regular-donut-small.svg",
+      "unicode": "\\ea07"
+    },
+    {
+      "name": "local-shipping",
+      "prefix": "mat",
+      "style": "regular",
+      "isFont": true,
+      "isColor": false,
+      "category": "Material Symbol",
+      "categorySlug": "material-symbol",
+      "badgeColor": "#8b5cf6",
+      "glyphName": "mat-regular-local-shipping",
+      "className": "mis-mat-regular-local-shipping",
+      "aliases": [
+        "mis-mat-local-shipping",
+        "mis-regular-local-shipping",
+        "mis-local-shipping",
+        "mis-local_shipping",
+        "mis-mat-local_shipping"
+      ],
+      "originalName": "local-shipping",
+      "project": null,
+      "stagedFileName": "mat-regular-local-shipping.svg",
+      "sourceRelPath": "svg/regular/mat-regular-local-shipping.svg",
+      "unicode": "\\ea08"
+    },
+    {
+      "name": "magnifying-glass",
+      "prefix": "sfs",
+      "style": "regular",
+      "isFont": true,
+      "isColor": false,
+      "category": "SF Symbol",
+      "categorySlug": "sf-symbol",
+      "badgeColor": "#f59e0b",
+      "glyphName": "sfs-regular-magnifying-glass",
+      "className": "mis-sfs-regular-magnifying-glass",
+      "aliases": [
+        "mis-sfs-magnifying-glass",
+        "mis-regular-magnifying-glass",
+        "mis-magnifying-glass",
+        "mis-magnifying_glass",
+        "mis-sfs-magnifying_glass"
+      ],
+      "originalName": "magnifying-glass",
+      "project": null,
+      "stagedFileName": "sfs-regular-magnifying-glass.svg",
+      "sourceRelPath": "svg/regular/sfs-regular-magnifying-glass.svg",
+      "unicode": "\\ea09"
+    },
+    {
+      "name": "dashboard",
+      "prefix": "cus",
+      "style": "solid",
+      "isFont": true,
+      "isColor": false,
+      "category": "Custom Mertani",
+      "categorySlug": "custom",
+      "badgeColor": "#10b981",
+      "glyphName": "cus-solid-dashboard",
+      "className": "mis-cus-solid-dashboard",
+      "aliases": [
+        "mis-cus-dashboard",
+        "mis-solid-dashboard",
+        "mis-dashboard",
+        "mis-cus-regular-dashboard"
+      ],
+      "originalName": "dashboard",
+      "project": "Project A",
+      "stagedFileName": "cus-solid-dashboard.svg",
+      "sourceRelPath": "svg/solid/cus-solid-dashboard.svg",
+      "unicode": "\\ea04"
+    },
+    {
+      "name": "favorite",
+      "prefix": "cus",
+      "style": "solid",
+      "isFont": true,
+      "isColor": false,
+      "category": "Custom Mertani",
+      "categorySlug": "custom",
+      "badgeColor": "#10b981",
+      "glyphName": "cus-solid-favorite",
+      "className": "mis-cus-solid-favorite",
+      "aliases": [
+        "mis-cus-favorite",
+        "mis-solid-favorite",
+        "mis-favorite"
+      ],
+      "originalName": "favorite",
+      "project": "Project B",
+      "stagedFileName": "cus-solid-favorite.svg",
+      "sourceRelPath": "svg/solid/cus-solid-favorite.svg",
+      "unicode": "\\ea05"
+    },
+    {
+      "name": "notification",
+      "prefix": "cus",
+      "style": "solid",
+      "isFont": true,
+      "isColor": false,
+      "category": "Custom Mertani",
+      "categorySlug": "custom",
+      "badgeColor": "#10b981",
+      "glyphName": "cus-solid-notification",
+      "className": "mis-cus-solid-notification",
+      "aliases": [
+        "mis-cus-notification",
+        "mis-solid-notification",
+        "mis-notification"
+      ],
+      "originalName": "notification",
+      "project": "Project C",
+      "stagedFileName": "cus-solid-notification.svg",
+      "sourceRelPath": "svg/solid/cus-solid-notification.svg",
+      "unicode": "\\ea06"
+    }
+  ],
+  "colorIcons": [],
+  "totalCount": 9
+}

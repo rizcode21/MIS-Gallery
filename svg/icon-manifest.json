@@ -1,10 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "MIS Gallery Icon Manifest",
-  "description": "Mapping riwayat aset icon dari struktur folder legacy ke arsitektur Font Awesome (prefix-style-name.svg)",
-  "version": "2.0.0",
+  "description": "Mapping riwayat aset icon dari struktur folder legacy ke arsitektur Font Awesome (prefix-style-name[-state].svg)",
+  "version": "2.1.0",
   "architecture": {
-    "namingPattern": "prefix-style-name.svg",
+    "namingPatterns": {
+      "monochrome": "prefix-style-name.svg (regular / solid)",
+      "color": "prefix-color-name[-state].svg"
+    },
     "prefixLength": 3,
     "prefixMap": {
       "cus": {
@@ -34,9 +37,18 @@
       }
     },
     "styles": {
-      "regular": "Gaya outline / line / stroke dengan bagian tengah hollow",
-      "solid": "Gaya filled / siluet / blok penuh"
-    }
+      "regular": "Gaya outline / line / stroke dengan bagian tengah hollow (dikonversi ke web font)",
+      "solid": "Gaya filled / siluet / blok penuh (dikonversi ke web font)",
+      "color": "Gaya multi-color / fullcolor / duotone (dikecualikan dari font, disimpan sebagai aset SVG berwarna utuh)"
+    },
+    "supportedStates": [
+      "default",
+      "active",
+      "selected",
+      "warning",
+      "danger",
+      "disabled"
+    ]
   },
   "icons": [
     {

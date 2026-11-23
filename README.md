@@ -3,9 +3,11 @@
 [![Build MIS Gallery Fonts](https://github.com/rizcode21/MIS-Gallery/actions/workflows/build-font.yml/badge.svg)](https://github.com/rizcode21/MIS-Gallery/actions/workflows/build-font.yml)
 [![jsDelivr](https://data.jsdelivr.net/v1/package/gh/rizcode21/MIS-Gallery/badge)](https://www.jsdelivr.com/package/gh/rizcode21/MIS-Gallery)
 
-Gudang Ikon & Web Font Terpusat Resmi **Mertani Icon Studio (MIS Gallery)** dengan arsitektur penamaan bergaya **Font Awesome** (`prefix-style-name.svg`).
+Gudang Ikon & Web Font Terpusat Resmi **Mertani Icon Studio (MIS Gallery)** dengan arsitektur penamaan bergaya **Font Awesome** (`prefix-style-name[-state].svg`).
 
-Repositori ini secara otomatis mengonversi kumpulan file ikon SVG menjadi web font (TTF, WOFF, WOFF2, EOT, CSS) menggunakan **GitHub Actions** dan mendistribusikannya secara gratis melalui **jsDelivr CDN** dan **GitHub Pages**.
+Sistem ini mendukung dua jalur aset terpadu:
+1. **Monochrome Icons (`regular` & `solid`):** Dikonversi otomatis menjadi web font (TTF, WOFF, WOFF2, EOT, CSS) untuk pewarnaan dinamis via CSS (`color: #...`).
+2. **Multi-color / Fullcolor Icons (`color`):** Dikecualikan dari font dan dipertahankan 100% sebagai file SVG berwarna asli dengan dukungan variasi *state*.
 
 🌐 **Katalog Ikon Live:** [https://rizcode21.github.io/MIS-Gallery/](https://rizcode21.github.io/MIS-Gallery/)
 
@@ -13,11 +15,9 @@ Repositori ini secara otomatis mengonversi kumpulan file ikon SVG menjadi web fo
 
 ## 📁 Struktur Folder Koleksi SVG
 
-Struktur direktori di dalam `svg/` menggunakan sistem flat berbasis **style** visual:
-
 ```text
 svg/
-├── regular/            # Seluruh icon bergaya outline / stroke (hollow center)
+├── regular/            # Ikon monochrome outline / stroke (dikonversi ke web font)
 │   ├── .gitkeep
 │   ├── cus-regular-partnership.svg
 │   ├── cus-regular-sales.svg
@@ -25,89 +25,79 @@ svg/
 │   ├── mat-regular-donut-small.svg
 │   ├── mat-regular-local-shipping.svg
 │   └── sfs-regular-magnifying-glass.svg
-├── solid/              # Seluruh icon bergaya filled / blok penuh (siluet)
+├── solid/              # Ikon monochrome filled / siluet penuh (dikonversi ke web font)
 │   ├── .gitkeep
 │   ├── cus-solid-dashboard.svg
 │   ├── cus-solid-favorite.svg
 │   └── cus-solid-notification.svg
+├── color/              # Ikon multi-color / fullcolor (dipertahankan sebagai SVG utuh)
+│   └── .gitkeep
 └── icon-manifest.json  # Catatan mapping riwayat asal aset & proyek
 ```
 
 ---
 
-## 🏷️ Standar Penamaan File (`prefix-style-name.svg`)
+## 🏷️ Standar Penamaan File
 
-Format file wajib mengikuti aturan:
-1. **Lowercase** & **kebab-case** (tanda hubung `-`, tanpa underscore atau spasi).
-2. **Prefix (3 huruf):**
-   - `cus` &rarr; Custom Mertani Studio (termasuk ikon Global & spesifik Proyek)
-   - `mat` &rarr; Google Material Symbols
-   - `sfs` &rarr; Apple SF Symbols
-   - *(Standar masa depan: `bst` untuk Bootstrap, `fth` untuk Feather)*
-3. **Style:**
-   - `regular` &rarr; Outline / stroke
-   - `solid` &rarr; Filled / blok penuh
-4. **Name:** Nama ikon yang dinormalisasi (contoh: `magnifying-glass`, `donut-small`).
+### 1. Ikon Font Monochrome (`prefix-style-name.svg`)
+- Format: `<prefix>-<regular|solid>-<name>.svg`
+- Contoh: `cus-regular-settings.svg`, `cus-solid-dashboard.svg`.
+
+### 2. Ikon Berwarna / Multi-color (`prefix-color-name[-state].svg`)
+- Format: `<prefix>-color-<name>[-<state>].svg`
+- Bagian `style` wajib bertuliskan `color`.
+- State yang didukung: `default`, `active`, `selected`, `warning`, `danger`, `disabled`.
+- Contoh:
+  - `cus-color-dam.svg`
+  - `cus-color-dam-default.svg`
+  - `cus-color-dam-active.svg`
+  - `cus-color-sensor-warning.svg`
 
 ---
 
 ## 💻 Panduan untuk Developer (Cara Pakai di Website)
 
-### 1. Pasang Link CSS
-Developer cukup menyematkan 1 baris link CSS online berikut pada tag `<head>` HTML:
-
+### A. Memanggil Ikon Font Monochrome (via CDN CSS)
+Pasang link CSS di tag `<head>`:
 ```html
-<!-- Pasang CSS MIS Gallery via jsDelivr CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/mis-icons.css">
 ```
 
-### 2. Memanggil Ikon
-Gunakan tag `<i>` dengan class `mis-<prefix>-<style>-<name>`:
-
+Panggil menggunakan tag `<i>`:
 ```html
-<!-- Regular (Outline) Icons -->
+<!-- Regular (Outline) -->
 <i class="mis-cus-regular-partnership"></i>
-<i class="mis-cus-regular-sales"></i>
-<i class="mis-cus-regular-settings"></i>
 <i class="mis-mat-regular-donut-small"></i>
-<i class="mis-mat-regular-local-shipping"></i>
-<i class="mis-sfs-regular-magnifying-glass"></i>
 
-<!-- Solid (Filled) Icons -->
+<!-- Solid (Filled) -->
 <i class="mis-cus-solid-dashboard"></i>
 <i class="mis-cus-solid-favorite"></i>
-<i class="mis-cus-solid-notification"></i>
 ```
 
-> **Developer Aliases:** Tersedia juga alias singkat untuk kemudahan penulisan seperti `.mis-partnership`, `.mis-cus-dashboard`, dan `.mis-donut-small`.
-
-### 3. Mengatur Warna & Ukuran via CSS:
-Karena berbasis font vektor, Anda bisa mengubah warna, efek hover, dan ukurannya layaknya teks biasa:
-
+Ubah ukuran & warna via CSS:
 ```css
 .mis-cus-regular-partnership {
-  font-size: 32px;
+  font-size: 24px;
   color: #10b981;
 }
+```
 
-.mis-cus-solid-dashboard {
-  font-size: 24px;
-  color: #38bdf8;
-}
+### B. Memanggil Ikon Berwarna / Fullcolor (via Direct SVG CDN)
+Gunakan tag `<img>` atau inline `<svg>` langsung ke CDN:
+```html
+<img src="https://cdn.jsdelivr.net/gh/rizcode21/MIS-Gallery@main/dist/color/cus-color-dam-active.svg" alt="Dam Active" width="32" height="32" />
 ```
 
 ---
 
 ## 🎨 Panduan untuk Desainer (Cara Menambah Ikon Baru)
 
-1. **Export SVG dari Figma / Illustrator:**
-   - Beri nama dengan format: `<prefix>-<style>-<nama-ikon>.svg`
-   - Contoh: `cus-regular-user.svg` atau `cus-solid-user.svg`.
-2. **Pilih Folder Tujuan:**
-   - Jika icon berupa garis/outline &rarr; masukkan ke folder `svg/regular/`.
-   - Jika icon berupa siluet blok penuh &rarr; masukkan ke folder `svg/solid/`.
-3. **Unggah ke GitHub & Simpan:**
-   - GitHub Actions otomatis meng-compile icon baru menjadi font web dan memperbarui link CSS dalam kurun waktu ~20 detik!
+1. **Tentukan Kategori Visual:**
+   - **Garis / Outline tunggal** &rarr; Beri nama `prefix-regular-name.svg` dan masukkan ke `svg/regular/`.
+   - **Siluet / Blok hitam tunggal** &rarr; Beri nama `prefix-solid-name.svg` dan masukkan ke `svg/solid/`.
+   - **Berwarna / Lebih dari 1 warna / Duotone** &rarr; Beri nama `prefix-color-name[-state].svg` dan masukkan ke `svg/color/`.
+2. **Unggah ke GitHub:**
+   - Robot otomatis (*GitHub Actions*) akan langsung meng-compile font dan mendistribusikan SVG berwarna dalam kurun waktu ~30 detik!
 
 ---
 
