@@ -1,0 +1,21 @@
+{
+  "name": "mis-gallery",
+  "version": "1.0.0",
+  "description": "MIS Gallery (Mertani Icon Studio) - Automated Custom Icon Font System",
+  "main": "scripts/build.js",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "icons",
+    "font",
+    "svg",
+    "mertani",
+    "mis-gallery"
+  ],
+  "author": "Mertani Icon Studio",
+  "license": "MIT",
+  "dependencies": {
+    "svgtofont": "^6.6.0"
+  }
+}

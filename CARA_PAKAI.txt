@@ -1,0 +1,101 @@
+======================================================================
+         PANDUAN PENGGUNAAN & CATATAN FITUR - SVG TO FONT STUDIO
+======================================================================
+
+Aplikasi ini adalah software portable untuk mengonversi kumpulan file 
+ikon SVG menjadi Web Font (TTF, WOFF, WOFF2, EOT), CSS, dan HTML Demo.
+
+Software ini BERSIFAT PORTABLE:
+- Tidak perlu install apa pun (bebas instalasi Node.js/Python/Go).
+- Langsung double-click file "SVG2Font_Studio.exe".
+- Bisa dipindah-pindah ke flashdisk atau komputer Windows mana saja.
+
+----------------------------------------------------------------------
+CARA PENGGUNAAN CEPAT (3 LANGKAH):
+----------------------------------------------------------------------
+1. Double click file "SVG2Font_Studio.exe".
+2. Klik tombol "Pilih Folder..." pada bagian "Folder Sumber SVG",
+   pilih folder tempat Anda menyimpan icon-icon SVG.
+   (Folder tujuan otomatis terisi ke sub-folder "dist").
+3. Klik tombol besar: "MULAI KONVERSI KE FONT".
+4. Selesai! Klik "Buka Folder Hasil" atau "Buka Preview HTML"
+   untuk langsung melihat dan mencoba ikon di browser web.
+
+
+----------------------------------------------------------------------
+OPSI PALING PRAKTIS UNTUK macOS (FILE converter.html):
+----------------------------------------------------------------------
+TIDAK PERLU BUKA FILE .EXE SAMA SEKALI!
+1. Cukup copy folder project ini ke laptop Mac.
+2. Di Mac, double-click file "converter.html" (otomatis buka di Safari/Chrome).
+3. Tarik & lepas file SVG dari Finder.
+4. Klik tombol "KONVERSI & UNDUH ZIP".
+5. File ZIP berisi font TTF, CSS, dan preview langsung terunduh!
+(100% berjalan offline di browser lokal Mac tanpa server dan tanpa install).
+
+----------------------------------------------------------------------
+CARA MENGGUNAKAN UNTUK PENGGUNA macOS (MODE WEB):
+----------------------------------------------------------------------
+Jika rekan tim Anda menggunakan macOS (MacBook/iMac):
+1. Buka aplikasi "SVG2Font_Studio.exe" di Windows.
+2. Pada bagian "Mode Web Server", klik tombol: "Nyalakan Server Web".
+3. Status akan berubah hijau dan menampilkan alamat URL Wi-Fi, 
+   misal: http://192.168.1.xxx:8080
+4. Klik tombol "Salin Link Mac" dan bagikan link tersebut ke pengguna Mac.
+5. Rekan pengguna Mac cukup membuka Safari / Chrome ke link tersebut:
+   - Tarik & lepas file SVG dari Mac.
+   - Klik "KONVERSI & UNDUH ZIP".
+   - File font .zip (TTF, WOFF, CSS, HTML demo) langsung terunduh di Mac!
+   (Sama sekali TIDAK perlu install apa pun di macOS).
+
+----------------------------------------------------------------------
+CATATAN FITUR & FUNGSI LENGKAP:
+----------------------------------------------------------------------
+1. Konversi Bentuk Otomatis (-convert-shapes)
+   - Mengubah elemen bentuk bawaan SVG seperti <rect> (kotak), 
+     <circle> (lingkaran), <ellipse>, <line>, <polygon>, dan 
+     <polyline> menjadi elemen <path>.
+   - Ikon tidak akan hilang atau rusak meskipun tidak digambar
+     hanya dengan path.
+
+2. Pengaturan Nama Font & Prefix CSS
+   - Nama Font (-font-name): Nama file dan nama font-family.
+     (Contoh: my-icons, custom-font).
+   - Prefix Class CSS (-prefix): Awalan class untuk memanggil ikon.
+     (Contoh: jika diisi "icon-", maka dipanggil dengan <i class="icon-nama"></i>).
+   - Start Unicode (-start-unicode): Kode awal karakter (default: 59905 / 0xEA01).
+
+3. Bersihkan Folder Tujuan (-empty)
+   - Membersihkan isi folder output sebelum membuat file baru agar
+     tidak tercampur dengan file lama.
+
+4. Pilihan Format Output
+   - [x] TTF    : Format font TrueType standar (bisa diinstal di Windows).
+   - [x] WOFF   : Web Open Font Format untuk browser web modern.
+   - [x] WOFF2  : Versi kompresi terbaik, ukuran file sangat kecil & cepat.
+   - [x] EOT    : Format font untuk browser legacy (Internet Explorer).
+   - [ ] SVG    : Format font berbasis SVG XML.
+
+5. File CSS & Metadata Otomatis
+   - Menghasilkan file .css yang siap dipasang di website.
+   - Menghasilkan file info.json berisi daftar nama ikon dan kode unicode.
+
+6. Fitur Preview HTML Interaktif
+   - Otomatis menghasilkan file "preview.html".
+   - Tampilan visual modern dengan pencarian ikon realtime.
+   - Slider pengubah ukuran ikon (16px sampai 72px).
+   - Klik kartu ikon untuk otomatis menyalin class CSS ke clipboard!
+
+----------------------------------------------------------------------
+CARA MENGGUNAKAN DI WEBSITE ANDA:
+----------------------------------------------------------------------
+1. Copy folder hasil konversi (misal folder "dist") ke project website.
+2. Panggil CSS di dalam tag <head> HTML:
+   <link rel="stylesheet" href="dist/my-icons.css">
+3. Tampilkan ikon di HTML:
+   <i class="icon-home"></i>
+   <i class="icon-search"></i>
+
+======================================================================
+Dibuat untuk mempermudah siapa saja membuat icon font dengan cepat!
+======================================================================

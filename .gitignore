@@ -1,0 +1,10 @@
+node_modules/
+build/
+*.exe
+*.rar
+*.pyc
+__pycache__/
+.user_uploaded/
+test_*
+temp_*
+*.log
