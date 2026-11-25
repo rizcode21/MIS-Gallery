@@ -41,7 +41,8 @@ svg/
 
 ### 1. Ikon Font Monochrome (`prefix-style-name.svg`)
 - Format: `<prefix>-<regular|solid>-<name>.svg`
-- Contoh: `cus-regular-settings.svg`, `cus-solid-dashboard.svg`.
+- Prefix yang didukung: `bsi` (Bootstrap Icons), `cus` (Custom Mertani), `mat` (Material Symbol), `sfs` (SF Symbol).
+- Contoh: `bsi-regular-alarm.svg`, `bsi-solid-alarm.svg`, `cus-regular-settings.svg`.
 
 ### 2. Ikon Berwarna / Multi-color (`prefix-color-name[-state].svg`)
 - Format: `<prefix>-color-<name>[-<state>].svg`

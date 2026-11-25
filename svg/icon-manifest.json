@@ -25,6 +25,11 @@
         "collection": "sf-symbol",
         "description": "Koleksi icon Apple SF Symbols"
       },
+      "bsi": {
+        "name": "Bootstrap Icons",
+        "collection": "bootstrap",
+        "description": "Koleksi resmi icon Bootstrap Icons"
+      },
       "bst": {
         "name": "Bootstrap Icons",
         "collection": "bootstrap",

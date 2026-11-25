@@ -62,7 +62,8 @@ const COLLECTION_CONFIG = {
   cus: { name: 'Custom Mertani', collection: 'custom', color: '#10b981' },
   mat: { name: 'Material Symbol', collection: 'material-symbol', color: '#8b5cf6' },
   sfs: { name: 'SF Symbol', collection: 'sf-symbol', color: '#f59e0b' },
-  bst: { name: 'Bootstrap', collection: 'bootstrap', color: '#6366f1' },
+  bsi: { name: 'Bootstrap Icons', collection: 'bootstrap', color: '#6366f1' },
+  bst: { name: 'Bootstrap Icons', collection: 'bootstrap', color: '#6366f1' },
   fth: { name: 'Feather', collection: 'feather', color: '#06b6d4' }
 };
 
@@ -489,7 +490,7 @@ function generateCatalogHtml(fontIcons, colorIcons) {
     <div class="controls">
       <div class="search-wrapper">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (cus/mat/sfs), atau style...">
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari nama icon, prefix (bsi/cus/mat/sfs), atau style...">
       </div>
 
       <!-- Style Filters -->
@@ -503,6 +504,7 @@ function generateCatalogHtml(fontIcons, colorIcons) {
       <!-- Collection Filters -->
       <div class="filter-row" id="collectionTabs">
         <button class="tab-btn active" data-collection="all">Semua Koleksi</button>
+        <button class="tab-btn" data-collection="bsi">Bootstrap Icons (bsi)</button>
         <button class="tab-btn" data-collection="cus">Custom Mertani (cus)</button>
         <button class="tab-btn" data-collection="mat">Material Symbol (mat)</button>
         <button class="tab-btn" data-collection="sfs">SF Symbol (sfs)</button>
